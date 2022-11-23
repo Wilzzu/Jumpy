@@ -4,12 +4,13 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    // Initializing needed variables for movement
-    [SerializeField] private float jumpForce;
+    // Variables for jumping
+    private float jumpForce;
     private float jumpDirection;
     private bool jumpDirectionSet = false;
     private Rigidbody2D rb;
 
+    // Variables for landing
     [SerializeField] private int neededLandingTime;
     private bool hasLanded;
     private int timeOnPlatform = 0;
@@ -25,7 +26,7 @@ public class PlayerMovement : MonoBehaviour
     private void Update()
     {
         // Check if player has stood on a platform long enough
-        if (timeOnPlatform > neededLandingTime)
+        if (timeOnPlatform >= neededLandingTime)
         {
             // Stop timer
             if (platformTimer != null) StopCoroutine(platformTimer);
@@ -40,13 +41,23 @@ public class PlayerMovement : MonoBehaviour
             if (!jumpDirectionSet)
             {
 
+                jumpDirection = 0; // replace this with real value taken from user input
+                Debug.Log("Jump direction set to: " + jumpDirection);
+                jumpDirectionSet = true;
             }
 
             // Set jump force on second jump press and jump
             else
             {
 
+                jumpForce = 550; // replace this with real value taken from user input
                 rb.AddForce(new Vector2(jumpDirection, jumpForce));
+                Debug.Log("Jumped with force of: " + jumpForce);
+
+                // After jumping reset variables
+                jumpDirectionSet = false;
+                hasLanded = false;
+                timeOnPlatform = 0;
             }
         }
     }
@@ -69,7 +80,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Platform"))
         {
-            // Stop timer, set hasLanded to false and reset time
+            // Stop timer and reset landing variables
             if (platformTimer != null) StopCoroutine(platformTimer);
             hasLanded = false;
             timeOnPlatform = 0;
@@ -84,6 +95,8 @@ public class PlayerMovement : MonoBehaviour
         {
             yield return new WaitForSeconds(0.1f);
             time++;
+            Debug.Log("Time: " + time + "/" + neededLandingTime);
+            if (time >= neededLandingTime) Debug.Log("Jumping enabled");
             timeOnPlatform = time;
         }
     }
