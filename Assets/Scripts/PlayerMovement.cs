@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     // Variables for jumping
-    [SerializeField] private float jumpForce;
+    private float jumpForce;
     private float jumpDirection;
     private bool jumpDirectionSet = false;
     private Rigidbody2D rb;
@@ -26,7 +26,7 @@ public class PlayerMovement : MonoBehaviour
     private void Update()
     {
         // Check if player has stood on a platform long enough
-        if (timeOnPlatform > neededLandingTime)
+        if (timeOnPlatform >= neededLandingTime)
         {
             // Stop timer
             if (platformTimer != null) StopCoroutine(platformTimer);
@@ -41,6 +41,8 @@ public class PlayerMovement : MonoBehaviour
             if (!jumpDirectionSet)
             {
 
+                jumpDirection = 0; // replace this with real value taken from user input
+                Debug.Log("Jump direction set to: " + jumpDirection);
                 jumpDirectionSet = true;
             }
 
@@ -48,7 +50,9 @@ public class PlayerMovement : MonoBehaviour
             else
             {
 
+                jumpForce = 550; // replace this with real value taken from user input
                 rb.AddForce(new Vector2(jumpDirection, jumpForce));
+                Debug.Log("Jumped with force of: " + jumpForce);
 
                 // After jumping reset variables
                 jumpDirectionSet = false;
@@ -91,6 +95,8 @@ public class PlayerMovement : MonoBehaviour
         {
             yield return new WaitForSeconds(0.1f);
             time++;
+            Debug.Log("Time: " + time + "/" + neededLandingTime);
+            if (time >= neededLandingTime) Debug.Log("Jumping enabled");
             timeOnPlatform = time;
         }
     }
