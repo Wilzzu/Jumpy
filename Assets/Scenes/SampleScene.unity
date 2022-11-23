@@ -354,6 +354,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   jumpForce: 500
+  neededLandingTime: 35
 --- !u!1 &1617381628
 GameObject:
   m_ObjectHideFlags: 0

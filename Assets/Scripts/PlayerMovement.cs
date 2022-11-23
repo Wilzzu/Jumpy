@@ -6,10 +6,14 @@ public class PlayerMovement : MonoBehaviour
 {
     // Initializing needed variables for movement
     [SerializeField] private float jumpForce;
-    private float direction;
+    private float jumpDirection;
+    private bool jumpDirectionSet = false;
     private Rigidbody2D rb;
 
+    [SerializeField] private int neededLandingTime;
     private bool hasLanded;
+    private int timeOnPlatform = 0;
+    private IEnumerator platformTimer;
 
     // Get player rigidbody
     private void Start()
@@ -20,18 +24,43 @@ public class PlayerMovement : MonoBehaviour
     // Jumping
     private void Update()
     {
+        // Check if player has stood on a platform long enough
+        if (timeOnPlatform > neededLandingTime)
+        {
+            // Stop timer
+            if (platformTimer != null) StopCoroutine(platformTimer);
+            hasLanded = true;
+
+            // After this the arrows will start rotating and you can choose jump direction
+        }
+
         if (Input.GetButtonDown("Jump") && hasLanded)
         {
-            rb.AddForce(new Vector2(rb.velocity.x, jumpForce));
+            // Set a jump direction on first jump press
+            if (!jumpDirectionSet)
+            {
+
+            }
+
+            // Set jump force on second jump press and jump
+            else
+            {
+
+                rb.AddForce(new Vector2(jumpDirection, jumpForce));
+            }
         }
     }
+
 
     // Check when player lands on a platform
     private void OnCollisionEnter2D(Collision2D other)
     {
         if (other.gameObject.CompareTag("Platform"))
         {
-            hasLanded = true;
+            // Start timer to check how long player stands on a platform
+            if (platformTimer != null) StopCoroutine(platformTimer);
+            platformTimer = PlatformTimer();
+            StartCoroutine(platformTimer);
         }
     }
 
@@ -40,7 +69,22 @@ public class PlayerMovement : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Platform"))
         {
+            // Stop timer, set hasLanded to false and reset time
+            if (platformTimer != null) StopCoroutine(platformTimer);
             hasLanded = false;
+            timeOnPlatform = 0;
+        }
+    }
+
+    // Timer for counting how long player has stayed on a platform
+    private IEnumerator PlatformTimer()
+    {
+        int time = 0;
+        while (true)
+        {
+            yield return new WaitForSeconds(0.1f);
+            time++;
+            timeOnPlatform = time;
         }
     }
 
