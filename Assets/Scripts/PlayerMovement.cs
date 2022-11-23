@@ -4,12 +4,13 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    // Initializing needed variables for movement
+    // Variables for jumping
     [SerializeField] private float jumpForce;
     private float jumpDirection;
     private bool jumpDirectionSet = false;
     private Rigidbody2D rb;
 
+    // Variables for landing
     [SerializeField] private int neededLandingTime;
     private bool hasLanded;
     private int timeOnPlatform = 0;
@@ -40,6 +41,7 @@ public class PlayerMovement : MonoBehaviour
             if (!jumpDirectionSet)
             {
 
+                jumpDirectionSet = true;
             }
 
             // Set jump force on second jump press and jump
@@ -47,6 +49,11 @@ public class PlayerMovement : MonoBehaviour
             {
 
                 rb.AddForce(new Vector2(jumpDirection, jumpForce));
+
+                // After jumping reset variables
+                jumpDirectionSet = false;
+                hasLanded = false;
+                timeOnPlatform = 0;
             }
         }
     }
@@ -69,7 +76,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Platform"))
         {
-            // Stop timer, set hasLanded to false and reset time
+            // Stop timer and reset landing variables
             if (platformTimer != null) StopCoroutine(platformTimer);
             hasLanded = false;
             timeOnPlatform = 0;
