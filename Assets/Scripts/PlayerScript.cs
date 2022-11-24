@@ -42,8 +42,9 @@ public class PlayerScript : MonoBehaviour
             timeOnPlatform = 0;
 
             // After this the arrow will start rotating and you can choose jump direction
-            aim.localRotation = Quaternion.Euler(0, 0, -5f);
             aim.gameObject.SetActive(true);
+            aim.localRotation = Quaternion.Euler(0, 0, -5f);
+            aim.localScale = new Vector3(1, 1, 1);
             jumpDirectionPhase = true;
         }
 
@@ -76,16 +77,18 @@ public class PlayerScript : MonoBehaviour
             // Set jump force on second jump press and jump
             if (jumpForcePhase)
             {
-                rb.AddForce(new Vector2((jumpDirection - 270) * -1, jumpForce * 8));
-                //Vector3 direction = new Vector3((jumpDirection - 270) * -1, 0, 0).normalized;
-                //rb.AddForce(direction * jumpForce, ForceMode2D.Impulse);
+                // Making the player jump to right direction with right force
+                float force = Mathf.Clamp(jumpForce / 4, 0.5f, 25);
+                Vector3 direction = new Vector3((jumpDirection - 270) * -1, force, 1).normalized;
+                rb.AddForce(direction * force, ForceMode2D.Impulse);
 
-                Debug.Log("Dir: " + ((jumpDirection - 270) * -1) + " Force: " + (jumpForce * 8));
-                aim.gameObject.SetActive(false);
+                Debug.Log("Dir: " + ((jumpDirection - 270) * -1) + " Force: " + force);
 
                 // After jumping reset variables
+                aim.gameObject.SetActive(false);
                 jumpForcePhase = false;
                 timeOnPlatform = 0;
+                jumpForce = 0;
             }
 
             // Set a jump direction on first jump press
