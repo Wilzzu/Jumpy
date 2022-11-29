@@ -14,7 +14,7 @@ public class PlayerScript : MonoBehaviour
     [SerializeField] private Transform aim;
     [SerializeField] private float rotationSpeed;
     private bool changeJumpRotation = false;
-    private bool changeJumpForce = false;
+    private bool changeJumpForceDirection = false;
     private IEnumerator jumpForceTimer;
     private float jumpDirection;
     private float jumpForce = 0;
@@ -22,8 +22,8 @@ public class PlayerScript : MonoBehaviour
 
     // Variables for landing
     [SerializeField] private int neededLandingTime;
-    private int timeOnPlatform = 999;
-    private IEnumerator platformTimer;
+    private int timeNotMoving = 999;
+    private IEnumerator notMovingTimer;
 
     // Get player rigidbody
     private void Start()
@@ -34,12 +34,14 @@ public class PlayerScript : MonoBehaviour
     // Jumping
     private void Update()
     {
+        if (rb.velocity.magnitude == 0) Debug.Log("Stopped");
+
         // Check if player has stood on a platform long enough
-        if (timeOnPlatform >= neededLandingTime)
+        if (timeNotMoving >= neededLandingTime)
         {
             // Stop timer
-            if (platformTimer != null) StopCoroutine(platformTimer);
-            timeOnPlatform = 0;
+            if (notMovingTimer != null) StopCoroutine(notMovingTimer);
+            timeNotMoving = 0;
 
             // After this the arrow will start rotating and you can choose jump direction
             aim.gameObject.SetActive(true);
@@ -62,9 +64,9 @@ public class PlayerScript : MonoBehaviour
         // Get jump force
         if (jumpForcePhase)
         {
-            if (jumpForce >= 100) changeJumpForce = true;
-            if (jumpForce <= 0) changeJumpForce = false;
-            if (changeJumpForce) jumpForce--;
+            if (jumpForce >= 100) changeJumpForceDirection = true;
+            if (jumpForce <= 0) changeJumpForceDirection = false;
+            if (changeJumpForceDirection) jumpForce--;
             else jumpForce++;
 
             aim.localScale = new Vector3(jumpForce / 100, 1, 1);
@@ -87,7 +89,7 @@ public class PlayerScript : MonoBehaviour
                 // After jumping reset variables
                 aim.gameObject.SetActive(false);
                 jumpForcePhase = false;
-                timeOnPlatform = 0;
+                timeNotMoving = 0;
                 jumpForce = 0;
             }
 
@@ -113,9 +115,9 @@ public class PlayerScript : MonoBehaviour
         if (other.gameObject.CompareTag("Platform"))
         {
             // Start timer to check how long player stands on a platform
-            if (platformTimer != null) StopCoroutine(platformTimer);
-            platformTimer = PlatformTimer();
-            StartCoroutine(platformTimer);
+            if (notMovingTimer != null) StopCoroutine(notMovingTimer);
+            notMovingTimer = NotMovingTimer();
+            StartCoroutine(notMovingTimer);
         }
     }
 
@@ -125,13 +127,13 @@ public class PlayerScript : MonoBehaviour
         if (other.gameObject.CompareTag("Platform"))
         {
             // Stop timer and reset landing variables
-            if (platformTimer != null) StopCoroutine(platformTimer);
-            timeOnPlatform = 0;
+            if (notMovingTimer != null) StopCoroutine(notMovingTimer);
+            timeNotMoving = 0;
         }
     }
 
     // Timer for counting how long player has stayed on a platform
-    private IEnumerator PlatformTimer()
+    private IEnumerator NotMovingTimer()
     {
         int time = 0;
         while (true)
@@ -140,7 +142,7 @@ public class PlayerScript : MonoBehaviour
             time++;
             Debug.Log("Time: " + time + "/" + neededLandingTime);
             if (time >= neededLandingTime) Debug.Log("Jumping enabled");
-            timeOnPlatform = time;
+            timeNotMoving = time;
         }
     }
 
