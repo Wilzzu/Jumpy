@@ -76,7 +76,7 @@ public class PlayerScript : MonoBehaviour
         // Get jump force
         if (jumpForcePhase)
         {
-            if (jumpForce >= 100) changeJumpForceDirection = true;
+            if (jumpForce >= 100) changeJumpForceDirection = true; // 9- oli hyvä mut meter oli liian nopee sillo
             if (jumpForce <= 0) changeJumpForceDirection = false;
             if (changeJumpForceDirection) jumpForce--;
             else jumpForce++;
@@ -95,8 +95,8 @@ public class PlayerScript : MonoBehaviour
                 // Making the player jump to right direction with right force
                 float force = Mathf.Clamp(jumpForce / 5, 0.5f, 20);
                 float finalDirection = (jumpDirection - 270) * -1;
-                Debug.Log("raw: " + finalDirection + " final: " + Mathf.Clamp(100 / Mathf.Abs(finalDirection) * 10, 0.5f, 30));
-                float verticalAmount = Mathf.Clamp(100 / Mathf.Abs(finalDirection) * 10, 0.5f, 30);
+                Debug.Log("raw: " + finalDirection + " final: " + Mathf.Clamp(100 / Mathf.Abs(finalDirection) * 10, 0.5f, 25) * 1.5f);
+                float verticalAmount = Mathf.Clamp(100 / Mathf.Abs(finalDirection) * 10, 0.5f, 25) * 1.5f;
 
                 Vector3 direction = new Vector3(finalDirection, verticalAmount, 1).normalized;
                 rb.AddForce(direction * force, ForceMode2D.Impulse);
