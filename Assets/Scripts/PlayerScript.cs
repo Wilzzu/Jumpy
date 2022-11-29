@@ -8,7 +8,6 @@ public class PlayerScript : MonoBehaviour
     private bool jumpDirectionPhase = false;
     private bool jumpForcePhase = false;
     private Rigidbody2D rb;
-    private bool firstTimeLanding = true;
 
     // Variables for aiming
     [SerializeField] private Transform aim;
@@ -24,6 +23,8 @@ public class PlayerScript : MonoBehaviour
     [SerializeField] private int neededLandingTime;
     private int timeNotMoving = 999;
     private IEnumerator notMovingTimer;
+    private bool checkingLanding = false;
+    private bool firstTimeLanding = true;
 
     // Get player rigidbody
     private void Start()
@@ -34,7 +35,16 @@ public class PlayerScript : MonoBehaviour
     // Jumping
     private void Update()
     {
-        if (rb.velocity.magnitude == 0) Debug.Log("Stopped");
+        if (rb.velocity.magnitude == 0 && !checkingLanding && !firstTimeLanding)
+        {
+            Debug.Log("started checkign");
+            // Start timer to check how long player stands on a platform
+            if (notMovingTimer != null) StopCoroutine(notMovingTimer);
+            notMovingTimer = NotMovingTimer();
+            StartCoroutine(notMovingTimer);
+
+        }
+        else if (rb.velocity.magnitude != 0) checkingLanding = false;
 
         // Check if player has stood on a platform long enough
         if (timeNotMoving >= neededLandingTime)
@@ -91,6 +101,7 @@ public class PlayerScript : MonoBehaviour
                 jumpForcePhase = false;
                 timeNotMoving = 0;
                 jumpForce = 0;
+                firstTimeLanding = false;
             }
 
             // Set a jump direction on first jump press
@@ -103,39 +114,11 @@ public class PlayerScript : MonoBehaviour
         }
     }
 
-
-    // Check when player lands on a platform
-    private void OnCollisionEnter2D(Collision2D other)
-    {
-        if (firstTimeLanding)
-        {
-            firstTimeLanding = false;
-            return;
-        }
-        if (other.gameObject.CompareTag("Platform"))
-        {
-            // Start timer to check how long player stands on a platform
-            if (notMovingTimer != null) StopCoroutine(notMovingTimer);
-            notMovingTimer = NotMovingTimer();
-            StartCoroutine(notMovingTimer);
-        }
-    }
-
-    // Check when player leaves a platform
-    private void OnCollisionExit2D(Collision2D other)
-    {
-        if (other.gameObject.CompareTag("Platform"))
-        {
-            // Stop timer and reset landing variables
-            if (notMovingTimer != null) StopCoroutine(notMovingTimer);
-            timeNotMoving = 0;
-        }
-    }
-
     // Timer for counting how long player has stayed on a platform
     private IEnumerator NotMovingTimer()
     {
         int time = 0;
+        checkingLanding = true;
         while (true)
         {
             yield return new WaitForSeconds(0.1f);
