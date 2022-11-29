@@ -12,6 +12,7 @@ public class PlayerScript : MonoBehaviour
     // Variables for aiming
     [SerializeField] private Transform aim;
     [SerializeField] private float rotationSpeed;
+    [SerializeField] private float amount;
     private bool changeJumpRotation = false;
     private bool changeJumpForceDirection = false;
     private IEnumerator jumpForceTimer;
@@ -35,10 +36,11 @@ public class PlayerScript : MonoBehaviour
     // Jumping
     private void Update()
     {
+        // Check if player is not moving and allow them to jump again after some time
         if (rb.velocity.magnitude == 0 && !checkingLanding && !firstTimeLanding)
         {
             Debug.Log("started checkign");
-            // Start timer to check how long player stands on a platform
+            // Start timer to check how long player has been stopped for
             if (notMovingTimer != null) StopCoroutine(notMovingTimer);
             notMovingTimer = NotMovingTimer();
             StartCoroutine(notMovingTimer);
@@ -46,7 +48,7 @@ public class PlayerScript : MonoBehaviour
         }
         else if (rb.velocity.magnitude != 0) checkingLanding = false;
 
-        // Check if player has stood on a platform long enough
+        // Check if player has been stopped for long enough
         if (timeNotMoving >= neededLandingTime)
         {
             // Stop timer
@@ -89,12 +91,17 @@ public class PlayerScript : MonoBehaviour
             // Set jump force on second jump press and jump
             if (jumpForcePhase)
             {
+                Debug.Log(jumpForce);
                 // Making the player jump to right direction with right force
-                float force = Mathf.Clamp(jumpForce / 4, 0.5f, 25);
-                Vector3 direction = new Vector3((jumpDirection - 270) * -1, force, 1).normalized;
+                float force = Mathf.Clamp(jumpForce / 5, 0.5f, 20);
+                float finalDirection = (jumpDirection - 270) * -1;
+                Debug.Log("raw: " + finalDirection + " final: " + Mathf.Clamp(100 / Mathf.Abs(finalDirection) * 10, 0.5f, 30));
+                float verticalAmount = Mathf.Clamp(100 / Mathf.Abs(finalDirection) * 10, 0.5f, 30);
+
+                Vector3 direction = new Vector3(finalDirection, verticalAmount, 1).normalized;
                 rb.AddForce(direction * force, ForceMode2D.Impulse);
 
-                Debug.Log("Dir: " + ((jumpDirection - 270) * -1) + " Force: " + force);
+                Debug.Log("Dir: " + finalDirection + " Force: " + force);
 
                 // After jumping reset variables
                 aim.gameObject.SetActive(false);
