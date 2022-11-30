@@ -30,6 +30,7 @@ public class PlayerScript : MonoBehaviour
     private IEnumerator notMovingTimer;
     private bool checkingLanding = false;
     private bool firstTimeLanding = true;
+    public bool hasLanded = true;
 
     // Get player rigidbody
     private void Start()
@@ -47,8 +48,8 @@ public class PlayerScript : MonoBehaviour
             if (notMovingTimer != null) StopCoroutine(notMovingTimer);
             notMovingTimer = NotMovingTimer();
             StartCoroutine(notMovingTimer);
-
         }
+        // Don't start a new timer if one is being used already
         else if (rb.velocity.magnitude != 0) checkingLanding = false;
 
         // Check if player has been stopped for long enough
@@ -63,6 +64,7 @@ public class PlayerScript : MonoBehaviour
             aim.localRotation = Quaternion.Euler(0, 0, -5f);
             aim.localScale = new Vector3(1, 1, 1);
             jumpDirectionPhase = true;
+            hasLanded = true;
         }
 
         if (jumpDirectionPhase)
@@ -137,6 +139,7 @@ public class PlayerScript : MonoBehaviour
             timeNotMoving = 0;
             jumpForce = 0;
             firstTimeLanding = false;
+            hasLanded = false;
         }
     }
 
