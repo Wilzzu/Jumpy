@@ -10,7 +10,7 @@ public class CameraMovement : MonoBehaviour
     // Variables for following player
     [Header("Following player")]
     [SerializeField] private Transform player;
-    [SerializeField] private float smoothAmount = 0.25f;
+    [SerializeField] private float smoothAmount;
     private Vector3 velocity = Vector3.zero;
 
     // Variables for zooming
@@ -31,7 +31,7 @@ public class CameraMovement : MonoBehaviour
     }
 
     // Follow player with camera and apply given zoom amount and offset
-    private void MoveCamera(float zoomAmount, float verticalOffset)
+    private void MoveCamera(int zoomAmount, int verticalOffset)
     {
         Vector3 offset = new Vector3(0, verticalOffset, -10);
         Vector3 playerPos = player.position + offset;
