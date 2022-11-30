@@ -317,7 +317,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 665533431}
-  smoothAmount: 0.25
+  smoothAmount: 0.15
   zoomed: 1
   zoomSpeed: 0.1
 --- !u!1 &665533429
