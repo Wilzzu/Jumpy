@@ -39,7 +39,6 @@ public class PlayerScript : MonoBehaviour
         // Check if player is not moving and allow them to jump again after some time
         if (rb.velocity.magnitude == 0 && !checkingLanding && !firstTimeLanding)
         {
-            Debug.Log("started checkign");
             // Start timer to check how long player has been stopped for
             if (notMovingTimer != null) StopCoroutine(notMovingTimer);
             notMovingTimer = NotMovingTimer();
@@ -76,7 +75,7 @@ public class PlayerScript : MonoBehaviour
         // Get jump force
         if (jumpForcePhase)
         {
-            if (jumpForce >= 100) changeJumpForceDirection = true; // 9- oli hyvä mut meter oli liian nopee sillo
+            if (jumpForce >= 100) changeJumpForceDirection = true; //  80 oli hyvä mut meter oli liian nopee sillo
             if (jumpForce <= 0) changeJumpForceDirection = false;
             if (changeJumpForceDirection) jumpForce--;
             else jumpForce++;
@@ -91,19 +90,23 @@ public class PlayerScript : MonoBehaviour
             // Set jump force on second jump press and jump
             if (jumpForcePhase)
             {
-                Debug.Log(jumpForce);
-                // Making the player jump to right direction with right force
-                float force = Mathf.Clamp(jumpForce / 5, 0.5f, 20);
+                // Make the player jump to right direction with right amount of force
+                float force = Mathf.Clamp((jumpForce * 0.8f) / 5, 0.5f, 20);
                 float finalDirection = (jumpDirection - 270) * -1;
                 Debug.Log("raw: " + finalDirection + " final: " + Mathf.Clamp(100 / Mathf.Abs(finalDirection) * 10, 0.5f, 25) * 1.5f);
                 float verticalAmount = Mathf.Clamp(100 / Mathf.Abs(finalDirection) * 10, 0.5f, 25) * 1.5f;
 
+                // Launch player
                 Vector3 direction = new Vector3(finalDirection, verticalAmount, 1).normalized;
                 rb.AddForce(direction * force, ForceMode2D.Impulse);
 
+                // Add rotation to the jump
+                if (finalDirection > 0) rb.AddTorque(-0.5f, ForceMode2D.Impulse);
+                else rb.AddTorque(0.5f, ForceMode2D.Impulse);
+
                 Debug.Log("Dir: " + finalDirection + " Force: " + force);
 
-                // After jumping reset variables
+                // After jumping reset variables used for jumping
                 aim.gameObject.SetActive(false);
                 jumpForcePhase = false;
                 timeNotMoving = 0;
@@ -126,11 +129,11 @@ public class PlayerScript : MonoBehaviour
     {
         int time = 0;
         checkingLanding = true;
+        Debug.Log("Started count");
         while (true)
         {
             yield return new WaitForSeconds(0.1f);
             time++;
-            Debug.Log("Time: " + time + "/" + neededLandingTime);
             if (time >= neededLandingTime) Debug.Log("Jumping enabled");
             timeNotMoving = time;
         }
