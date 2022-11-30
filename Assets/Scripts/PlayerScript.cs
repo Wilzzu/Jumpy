@@ -8,6 +8,10 @@ public class PlayerScript : MonoBehaviour
     private bool jumpDirectionPhase = false;
     private bool jumpForcePhase = false;
     private Rigidbody2D rb;
+    private bool launchPlayer = false;
+    private Vector3 directionVector;
+    private float force;
+
 
     // Variables for aiming
     [SerializeField] private Transform aim;
@@ -75,7 +79,7 @@ public class PlayerScript : MonoBehaviour
         // Get jump force
         if (jumpForcePhase)
         {
-            if (jumpForce >= 100) changeJumpForceDirection = true; //  80 oli hyvä mut meter oli liian nopee sillo
+            if (jumpForce >= 100) changeJumpForceDirection = true;
             if (jumpForce <= 0) changeJumpForceDirection = false;
             if (changeJumpForceDirection) jumpForce--;
             else jumpForce++;
@@ -91,27 +95,14 @@ public class PlayerScript : MonoBehaviour
             if (jumpForcePhase)
             {
                 // Make the player jump to right direction with right amount of force
-                float force = Mathf.Clamp((jumpForce * 0.8f) / 5, 0.5f, 20);
+                force = Mathf.Clamp((jumpForce * 0.8f) / 5, 0.5f, 20);
                 float finalDirection = (jumpDirection - 270) * -1;
                 Debug.Log("raw: " + finalDirection + " final: " + Mathf.Clamp(100 / Mathf.Abs(finalDirection) * 10, 0.5f, 25) * 1.5f);
                 float verticalAmount = Mathf.Clamp(100 / Mathf.Abs(finalDirection) * 10, 0.5f, 25) * 1.5f;
 
                 // Launch player
-                Vector3 direction = new Vector3(finalDirection, verticalAmount, 1).normalized;
-                rb.AddForce(direction * force, ForceMode2D.Impulse);
-
-                // Add rotation to the jump
-                if (finalDirection > 0) rb.AddTorque(-0.5f, ForceMode2D.Impulse);
-                else rb.AddTorque(0.5f, ForceMode2D.Impulse);
-
-                Debug.Log("Dir: " + finalDirection + " Force: " + force);
-
-                // After jumping reset variables used for jumping
-                aim.gameObject.SetActive(false);
-                jumpForcePhase = false;
-                timeNotMoving = 0;
-                jumpForce = 0;
-                firstTimeLanding = false;
+                directionVector = new Vector3(finalDirection, verticalAmount, 1).normalized;
+                launchPlayer = true;
             }
 
             // Set a jump direction on first jump press
@@ -124,7 +115,32 @@ public class PlayerScript : MonoBehaviour
         }
     }
 
-    // Timer for counting how long player has stayed on a platform
+    // Call physics based jumping in FixedUpdate
+    private void FixedUpdate()
+    {
+        if (launchPlayer)
+        {
+            launchPlayer = false;
+
+            // Launch player
+            rb.AddForce(directionVector * force, ForceMode2D.Impulse);
+
+            // Add rotation to the jump
+            if (directionVector.x > 0) rb.AddTorque(-0.5f, ForceMode2D.Impulse);
+            else rb.AddTorque(0.5f, ForceMode2D.Impulse);
+
+            Debug.Log("Dir: " + directionVector.x + " Force: " + force);
+
+            // After jumping reset variables used for jumping
+            aim.gameObject.SetActive(false);
+            jumpForcePhase = false;
+            timeNotMoving = 0;
+            jumpForce = 0;
+            firstTimeLanding = false;
+        }
+    }
+
+    // Timer for counting how long player hasn't been moving for
     private IEnumerator NotMovingTimer()
     {
         int time = 0;
