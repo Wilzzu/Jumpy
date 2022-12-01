@@ -61,7 +61,7 @@ public class PlayerScript : MonoBehaviour
 
             // After this the arrow will start rotating and you can choose jump direction
             aim.gameObject.SetActive(true);
-            aim.localRotation = Quaternion.Euler(0, 0, -5f);
+            aim.eulerAngles = new Vector3(0, 0, 355);
             aim.localScale = new Vector3(1, 1, 1);
             jumpDirectionPhase = true;
             hasLanded = true;
