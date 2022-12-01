@@ -10,7 +10,6 @@ public class CameraMovement : MonoBehaviour
 
     // Variables for camera attributes
     private float smoothAmount = 0.15f;
-    private IEnumerator smoothTimer;
 
     // Variables for following player
     [SerializeField] private Transform player;
@@ -21,6 +20,7 @@ public class CameraMovement : MonoBehaviour
     [SerializeField] private float zoomSpeed;
     [SerializeField] private bool zoomed = true;
     private float[] zoomAmount = new float[] { 8, 7 };
+    private float currentPosition;
 
     private void Start()
     {
@@ -36,24 +36,23 @@ public class CameraMovement : MonoBehaviour
         if (zoomed) zoomAmount = new float[] { 5, 3 };
         else zoomAmount = new float[] { 8, 7 };
 
-        // Move camera vertically when player is moving fast
+        // Move camera vertically when player is moving fast vertically
         bool playerLanded = player.gameObject.GetComponent<PlayerScript>().hasLanded;
         if (playerLanded) moveVert = false;
-        else if (Mathf.Abs(rb.velocity.y) > 10 && !moveVert)
+        else if (Mathf.Abs(rb.velocity.y) > 5 && !moveVert) moveVert = true;
+
+
+        // Move camera vertically if needed
+        if (moveVert)
         {
-            // Make camera transition smooth
-            smoothAmount = 0.4f;
-            moveVert = true;
-
-            // Start timer to make camera transition smooth, lerp didn't work for some reason
-            if (smoothTimer != null) StopCoroutine(smoothTimer);
-            smoothTimer = SmoothTimer();
-            StartCoroutine(smoothTimer);
+            currentPosition = Mathf.Lerp(currentPosition, zoomAmount[1] - 2, 1.5f * Time.deltaTime); ;
+            MoveCamera(zoomAmount[0], currentPosition);
         }
-
-        // Lastly move camera
-        if (moveVert) MoveCamera(zoomAmount[0], zoomAmount[1] - 2);
-        else MoveCamera(zoomAmount[0], zoomAmount[1]);
+        else
+        {
+            currentPosition = Mathf.Lerp(currentPosition, zoomAmount[1], 7 * Time.deltaTime);
+            MoveCamera(zoomAmount[0], currentPosition);
+        }
     }
 
     // Follow player with camera and apply given zoom amount and offset
@@ -66,15 +65,4 @@ public class CameraMovement : MonoBehaviour
         cam.orthographicSize = Mathf.Lerp(cam.orthographicSize, zoomAmount, zoomSpeed);
         transform.position = Vector3.SmoothDamp(transform.position, playerPos, ref velocity, smoothAmount);
     }
-
-    // Timer for making camera transitions smooth
-    private IEnumerator SmoothTimer()
-    {
-        while (smoothAmount > 0.15f)
-        {
-            yield return null;
-            smoothAmount -= 0.005f;
-        }
-    }
-
 }
