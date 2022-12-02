@@ -96,32 +96,30 @@ public class PlayerScript : MonoBehaviour
 
             aim.localScale = new Vector3(jumpForce / 100, 1, 1);
         }
+    }
 
-
-        if (Input.GetButtonDown("Jump"))
+    private void OnAction()
+    {
+        // Set jump force on second jump press and jump
+        if (jumpForcePhase)
         {
+            // Make the player jump to right direction with right amount of force
+            force = Mathf.Clamp((jumpForce * 0.8f) / 5, 0.5f, 20);
+            float finalDirection = (jumpDirection - 270) * -1;
+            Debug.Log("raw: " + finalDirection + " final: " + Mathf.Clamp(100 / Mathf.Abs(finalDirection) * 10, 0.5f, 25) * 1.5f);
+            float verticalAmount = Mathf.Clamp(100 / Mathf.Abs(finalDirection) * 10, 0.5f, 25) * 1.5f;
 
-            // Set jump force on second jump press and jump
-            if (jumpForcePhase)
-            {
-                // Make the player jump to right direction with right amount of force
-                force = Mathf.Clamp((jumpForce * 0.8f) / 5, 0.5f, 20);
-                float finalDirection = (jumpDirection - 270) * -1;
-                Debug.Log("raw: " + finalDirection + " final: " + Mathf.Clamp(100 / Mathf.Abs(finalDirection) * 10, 0.5f, 25) * 1.5f);
-                float verticalAmount = Mathf.Clamp(100 / Mathf.Abs(finalDirection) * 10, 0.5f, 25) * 1.5f;
+            // Launch player
+            directionVector = new Vector3(finalDirection, verticalAmount, 1).normalized;
+            launchPlayer = true;
+        }
 
-                // Launch player
-                directionVector = new Vector3(finalDirection, verticalAmount, 1).normalized;
-                launchPlayer = true;
-            }
-
-            // Set a jump direction on first jump press
-            if (jumpDirectionPhase)
-            {
-                jumpDirection = aim.eulerAngles.z;
-                jumpDirectionPhase = false;
-                jumpForcePhase = true;
-            }
+        // Set a jump direction on first jump press
+        if (jumpDirectionPhase)
+        {
+            jumpDirection = aim.eulerAngles.z;
+            jumpDirectionPhase = false;
+            jumpForcePhase = true;
         }
     }
 
