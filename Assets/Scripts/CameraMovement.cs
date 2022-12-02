@@ -29,7 +29,7 @@ public class CameraMovement : MonoBehaviour
         rb = player.GetComponent<Rigidbody2D>();
     }
 
-    void FixedUpdate()
+    private void FixedUpdate()
     {
         // Assign camera values depending on if player has zoomed or not
         // Can be used in the future if needed
@@ -53,6 +53,12 @@ public class CameraMovement : MonoBehaviour
             currentPosition = Mathf.Lerp(currentPosition, zoomAmount[1], 7 * Time.deltaTime);
             MoveCamera(zoomAmount[0], currentPosition);
         }
+    }
+
+    // Change zoom when player presses the zoom key
+    public void changeZoom()
+    {
+        Debug.Log("Change zoom");
     }
 
     // Follow player with camera and apply given zoom amount and offset

@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class PlayerScript : MonoBehaviour
 {
+
+    private CameraMovement cam;
+
     // Variables for jumping
     private bool jumpDirectionPhase = false;
     private bool jumpForcePhase = false;
@@ -11,7 +14,6 @@ public class PlayerScript : MonoBehaviour
     private bool launchPlayer = false;
     private Vector3 directionVector;
     private float force;
-
 
     // Variables for aiming
     [SerializeField] private Transform aim;
@@ -22,7 +24,6 @@ public class PlayerScript : MonoBehaviour
     private IEnumerator jumpForceTimer;
     private float jumpDirection;
     private float jumpForce = 0;
-
 
     // Variables for landing
     [SerializeField] private int neededLandingTime;
@@ -37,6 +38,7 @@ public class PlayerScript : MonoBehaviour
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        cam = GameObject.Find("Main Camera").GetComponent<CameraMovement>();
     }
 
     // Jumping
@@ -98,7 +100,8 @@ public class PlayerScript : MonoBehaviour
         }
     }
 
-    private void OnAction()
+    // Triggers when player presses jump key
+    private void OnJump()
     {
         // Set jump force on second jump press and jump
         if (jumpForcePhase)
@@ -121,6 +124,12 @@ public class PlayerScript : MonoBehaviour
             jumpDirectionPhase = false;
             jumpForcePhase = true;
         }
+    }
+
+    // Triggers when player presses zoom key
+    private void OnZoom()
+    {
+        cam.changeZoom();
     }
 
     // Call physics based jumping in FixedUpdate
