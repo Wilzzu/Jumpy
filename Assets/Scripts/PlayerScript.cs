@@ -31,6 +31,7 @@ public class PlayerScript : MonoBehaviour
     private bool checkingLanding = false;
     private bool firstTimeLanding = true;
     public bool hasLanded = true;
+    private bool onFinish = false;
 
     // Get player rigidbody
     private void Start()
@@ -59,12 +60,19 @@ public class PlayerScript : MonoBehaviour
             if (notMovingTimer != null) StopCoroutine(notMovingTimer);
             timeNotMoving = 0;
 
-            // After this the arrow will start rotating and you can choose jump direction
-            aim.gameObject.SetActive(true);
-            aim.eulerAngles = new Vector3(0, 0, 355);
-            aim.localScale = new Vector3(1, 1, 1);
-            jumpDirectionPhase = true;
-            hasLanded = true;
+            // Check if player has finished the level
+            if (onFinish) GameManager.instance.LevelFinished();
+
+            // If not add rotating arrow to choose jump direction
+            else
+            {
+
+                aim.gameObject.SetActive(true);
+                aim.eulerAngles = new Vector3(0, 0, 355);
+                aim.localScale = new Vector3(1, 1, 1);
+                jumpDirectionPhase = true;
+                hasLanded = true;
+            }
         }
 
         if (jumpDirectionPhase)
@@ -141,6 +149,18 @@ public class PlayerScript : MonoBehaviour
             firstTimeLanding = false;
             hasLanded = false;
         }
+    }
+
+    // Check when player enters finish platform
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.tag == "Finish") onFinish = true;
+    }
+
+    // Check when player leaves finish platform
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.tag == "Finish") onFinish = false;
     }
 
     // Timer for counting how long player hasn't been moving for
