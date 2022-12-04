@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
@@ -10,6 +11,9 @@ public class GameManager : MonoBehaviour
     public bool isMobile = false;
     [SerializeField] private string[] noInGameUIScenes;
     [SerializeField] private GameObject inGameUI;
+    [SerializeField] private GameObject endScreenUI;
+    [SerializeField] private TextMeshProUGUI TimeValueText;
+    [SerializeField] private TextMeshProUGUI JumpsValueText;
 
     private void Awake()
     {
@@ -53,7 +57,9 @@ public class GameManager : MonoBehaviour
     // When player has finished the level
     public void LevelFinished()
     {
-        Debug.Log("Level finished!");
+        TimeValueText.text = "00:30:493";
+        JumpsValueText.text = "20";
+        endScreenUI.SetActive(true);
     }
 
 }
