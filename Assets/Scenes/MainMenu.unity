@@ -666,7 +666,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 223902969}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 414288298}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: ChangeScene
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: LevelSelect
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &223902969
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -981,6 +993,7 @@ MonoBehaviour:
   endScreenUI: {fileID: 986593821}
   TimeValueText: {fileID: 210449969}
   JumpsValueText: {fileID: 357371878}
+  currentScene: 
 --- !u!4 &414288299
 Transform:
   m_ObjectHideFlags: 0
@@ -2885,7 +2898,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1731533540}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 414288298}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: ChangeScene
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: next
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1731533540
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject endScreenUI;
     [SerializeField] private TextMeshProUGUI TimeValueText;
     [SerializeField] private TextMeshProUGUI JumpsValueText;
+    public string currentScene;
 
     private void Awake()
     {
@@ -49,9 +50,24 @@ public class GameManager : MonoBehaviour
     // Check what scene loaded
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        // Assign current scene name to a variable
+        currentScene = scene.name;
+
         // Don't show ingame UI if user is in the menus
         if (Array.IndexOf(noInGameUIScenes, scene.name) > -1) inGameUI.SetActive(false);
         else inGameUI.SetActive(true);
+    }
+
+    public void ChangeScene(string sceneName)
+    {
+        // Disable end scene and change scene
+        endScreenUI.SetActive(false);
+        if (sceneName == "next")
+        {
+            int currentLevel = Int16.Parse(currentScene.Substring(currentScene.IndexOf("_") + 1));
+            SceneManager.LoadScene("Level_" + (currentLevel + 1));
+        };
+        SceneManager.LoadScene(sceneName);
     }
 
     // When player has finished the level
