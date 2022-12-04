@@ -5,7 +5,7 @@ using System;
 
 public class PlayerScript : MonoBehaviour
 {
-
+    // Variables for accessing other scripts
     private CameraMovement cam;
     public static event Action playerJumped;
 
@@ -36,7 +36,6 @@ public class PlayerScript : MonoBehaviour
     public bool hasLanded = true;
     private bool onFinish = false;
 
-    // Get player rigidbody
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -114,10 +113,10 @@ public class PlayerScript : MonoBehaviour
             Debug.Log("raw: " + finalDirection + " final: " + Mathf.Clamp(100 / Mathf.Abs(finalDirection) * 10, 0.5f, 25) * 1.5f);
             float verticalAmount = Mathf.Clamp(100 / Mathf.Abs(finalDirection) * 10, 0.5f, 25) * 1.5f;
 
-            // Launch player
+            // Finally launch the player
             directionVector = new Vector3(finalDirection, verticalAmount, 1).normalized;
             launchPlayer = true;
-            playerJumped?.Invoke();
+            playerJumped?.Invoke(); // Using event instead of a public function to show a different way to communicate with other scripts :)
         }
 
         // Set a jump direction on first jump press
@@ -149,8 +148,6 @@ public class PlayerScript : MonoBehaviour
             if (directionVector.x > 0) rb.AddTorque(-0.5f, ForceMode2D.Impulse);
             else rb.AddTorque(0.5f, ForceMode2D.Impulse);
 
-            Debug.Log("Dir: " + directionVector.x + " Force: " + force);
-
             // After jumping reset variables used for jumping
             aim.gameObject.SetActive(false);
             jumpForcePhase = false;
@@ -161,13 +158,13 @@ public class PlayerScript : MonoBehaviour
         }
     }
 
-    // Check when player enters finish platform
+    // Check when player enters the finish platform
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.tag == "Finish") onFinish = true;
     }
 
-    // Check when player leaves finish platform
+    // Check when player leaves the finish platform
     private void OnTriggerExit2D(Collider2D other)
     {
         if (other.tag == "Finish") onFinish = false;
