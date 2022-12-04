@@ -14,7 +14,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject endScreenUI;
     [SerializeField] private TextMeshProUGUI TimeValueText;
     [SerializeField] private TextMeshProUGUI JumpsValueText;
-    public string currentScene;
+    [SerializeField] private TextMeshProUGUI JumpCountMobileText;
+    [SerializeField] private TextMeshProUGUI JumpCountPcText;
+    private string currentScene;
+    private int jumpCount = 0;
 
     private void Awake()
     {
@@ -43,8 +46,16 @@ public class GameManager : MonoBehaviour
 
     private void OnEnable()
     {
-        // Subscribe to scene loading
+        // Subscribe to events
         SceneManager.sceneLoaded += OnSceneLoaded;
+        PlayerScript.playerJumped += OnPlayerJumped;
+    }
+
+    private void OnDisable()
+    {
+        // Unsubscribe from events
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+        PlayerScript.playerJumped -= OnPlayerJumped;
     }
 
     // Check what scene loaded
@@ -70,12 +81,24 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene(sceneName);
     }
 
+    private void OnPlayerJumped()
+    {
+        jumpCount++;
+        JumpCountPcText.text = "Jumps: " + jumpCount;
+        JumpCountMobileText.text = "Jumps: " + jumpCount;
+    }
+
     // When player has finished the level
     public void LevelFinished()
     {
         TimeValueText.text = "00:30:493";
-        JumpsValueText.text = "20";
+        JumpsValueText.text = jumpCount.ToString();
         endScreenUI.SetActive(true);
+
+        // Reset level stats
+        jumpCount = 0;
+        JumpCountPcText.text = "Jumps: " + jumpCount;
+        JumpCountMobileText.text = "Jumps: " + jumpCount;
     }
 
 }

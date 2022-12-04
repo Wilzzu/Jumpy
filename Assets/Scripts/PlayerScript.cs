@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class PlayerScript : MonoBehaviour
 {
 
     private CameraMovement cam;
+    public static event Action playerJumped;
 
     // Variables for jumping
     private bool jumpDirectionPhase = false;
@@ -115,6 +117,7 @@ public class PlayerScript : MonoBehaviour
             // Launch player
             directionVector = new Vector3(finalDirection, verticalAmount, 1).normalized;
             launchPlayer = true;
+            playerJumped?.Invoke();
         }
 
         // Set a jump direction on first jump press
