@@ -93,6 +93,7 @@ public class GameManager : MonoBehaviour
     {
         TimeValueText.text = "00:30:493";
         JumpsValueText.text = jumpCount.ToString();
+        inGameUI.SetActive(false);
         endScreenUI.SetActive(true);
 
         // Reset level stats
