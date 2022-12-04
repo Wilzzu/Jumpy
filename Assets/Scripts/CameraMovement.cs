@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CameraMovement : MonoBehaviour
 {
-    // Variable for game objects
+    // Variables for game objects
     private Camera cam;
     private Rigidbody2D rb;
 
@@ -32,17 +32,16 @@ public class CameraMovement : MonoBehaviour
     private void FixedUpdate()
     {
         // Assign camera values depending on if player has zoomed or not
-        // Can be used in the future if needed
         if (zoomed) zoomAmount = new float[] { 5, 3 };
         else zoomAmount = new float[] { 8, 7 };
 
-        // Move camera vertically when player is moving fast vertically
+        // Check if player is moving fast vertically and change camera position variables if needed
         bool playerLanded = player.gameObject.GetComponent<PlayerScript>().hasLanded;
         if (playerLanded) moveVert = false;
         else if (Mathf.Abs(rb.velocity.y) > 5 && !moveVert) moveVert = true;
 
 
-        // Move camera vertically if needed
+        // Finally move the camera
         if (moveVert)
         {
             currentPosition = Mathf.Lerp(currentPosition, zoomAmount[1] - 2, 1.5f * Time.deltaTime); ;

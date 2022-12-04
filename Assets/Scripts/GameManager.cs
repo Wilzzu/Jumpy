@@ -27,10 +27,7 @@ public class GameManager : MonoBehaviour
             instance = this;
             DontDestroyOnLoad(gameObject);
         }
-        else
-        {
-            Destroy(gameObject);
-        }
+        else Destroy(gameObject);
 
         // Check if mobile
         if (Application.isMobilePlatform)
@@ -64,14 +61,14 @@ public class GameManager : MonoBehaviour
         // Assign current scene name to a variable
         currentScene = scene.name;
 
-        // Don't show ingame UI if user is in the menus
+        // Don't show ingame UI if player is in the menus
         if (Array.IndexOf(noInGameUIScenes, scene.name) > -1) inGameUI.SetActive(false);
         else inGameUI.SetActive(true);
     }
 
     public void ChangeScene(string sceneName)
     {
-        // Disable end scene and change scene
+        // Disable end UI and change scene
         endScreenUI.SetActive(false);
         if (sceneName == "next")
         {
@@ -83,6 +80,7 @@ public class GameManager : MonoBehaviour
 
     private void OnPlayerJumped()
     {
+        // Count player jumps
         jumpCount++;
         JumpCountPcText.text = "Jumps: " + jumpCount;
         JumpCountMobileText.text = "Jumps: " + jumpCount;
