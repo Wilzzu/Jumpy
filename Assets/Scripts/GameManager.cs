@@ -9,6 +9,8 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
     public bool isMobile = false;
+    [SerializeField] private GameObject mainMenuUIPc;
+    [SerializeField] private GameObject mainMenuUIMobile;
     [SerializeField] private string[] noInGameUIScenes;
     [SerializeField] private GameObject inGameUI;
     [SerializeField] private GameObject endScreenUI;
@@ -40,12 +42,10 @@ public class GameManager : MonoBehaviour
         if (Application.isMobilePlatform)
         {
             isMobile = true;
-            // Disable PC UI gameObject
+            mainMenuUIMobile.SetActive(true);
         }
-        else
-        {
-            // Disable Mobile UI gameObject
-        }
+        else mainMenuUIPc.SetActive(true);
+
     }
 
     private void OnEnable()
