@@ -1,9 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class PlayerScript : MonoBehaviour
 {
+    // Variables for accessing other scripts
+    private CameraMovement cam;
+    public static event Action playerJumped;
+
     // Variables for jumping
     private bool jumpDirectionPhase = false;
     private bool jumpForcePhase = false;
@@ -11,7 +16,6 @@ public class PlayerScript : MonoBehaviour
     private bool launchPlayer = false;
     private Vector3 directionVector;
     private float force;
-
 
     // Variables for aiming
     [SerializeField] private Transform aim;
@@ -23,7 +27,6 @@ public class PlayerScript : MonoBehaviour
     private float jumpDirection;
     private float jumpForce = 0;
 
-
     // Variables for landing
     [SerializeField] private int neededLandingTime;
     private int timeNotMoving = 999;
@@ -31,11 +34,12 @@ public class PlayerScript : MonoBehaviour
     private bool checkingLanding = false;
     private bool firstTimeLanding = true;
     public bool hasLanded = true;
+    private bool onFinish = false;
 
-    // Get player rigidbody
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        cam = GameObject.Find("Main Camera").GetComponent<CameraMovement>();
     }
 
     // Jumping
@@ -59,12 +63,19 @@ public class PlayerScript : MonoBehaviour
             if (notMovingTimer != null) StopCoroutine(notMovingTimer);
             timeNotMoving = 0;
 
-            // After this the arrow will start rotating and you can choose jump direction
-            aim.gameObject.SetActive(true);
-            aim.localRotation = Quaternion.Euler(0, 0, -5f);
-            aim.localScale = new Vector3(1, 1, 1);
-            jumpDirectionPhase = true;
-            hasLanded = true;
+            // Check if player has finished the level
+            if (onFinish) GameManager.instance.LevelFinished();
+
+            // If not add rotating arrow to choose jump direction
+            else
+            {
+
+                aim.gameObject.SetActive(true);
+                aim.eulerAngles = new Vector3(0, 0, 355);
+                aim.localScale = new Vector3(1, 1, 1);
+                jumpDirectionPhase = true;
+                hasLanded = true;
+            }
         }
 
         if (jumpDirectionPhase)
@@ -83,38 +94,55 @@ public class PlayerScript : MonoBehaviour
         {
             if (jumpForce >= 100) changeJumpForceDirection = true;
             if (jumpForce <= 0) changeJumpForceDirection = false;
-            if (changeJumpForceDirection) jumpForce--;
-            else jumpForce++;
+            if (changeJumpForceDirection) jumpForce = jumpForce - (Time.deltaTime * 80);
+            else jumpForce = jumpForce + (Time.deltaTime * 80);
 
             aim.localScale = new Vector3(jumpForce / 100, 1, 1);
         }
+    }
 
-
-        if (Input.GetButtonDown("Jump"))
+    // Triggers when player presses jump
+    private void OnJump()
+    {
+        // Set jump force on second jump press and jump
+        if (jumpForcePhase)
         {
+            // Make the player jump to right direction with right amount of force
+            force = Mathf.Clamp((jumpForce * 0.8f) / 5, 0.5f, 20);
+            float finalDirection = (jumpDirection - 270) * -1;
+            Debug.Log("raw: " + finalDirection + " final: " + Mathf.Clamp(100 / Mathf.Abs(finalDirection) * 10, 0.5f, 25) * 1.5f);
+            float verticalAmount = Mathf.Clamp(100 / Mathf.Abs(finalDirection) * 10, 0.5f, 25) * 1.5f;
 
-            // Set jump force on second jump press and jump
-            if (jumpForcePhase)
-            {
-                // Make the player jump to right direction with right amount of force
-                force = Mathf.Clamp((jumpForce * 0.8f) / 5, 0.5f, 20);
-                float finalDirection = (jumpDirection - 270) * -1;
-                Debug.Log("raw: " + finalDirection + " final: " + Mathf.Clamp(100 / Mathf.Abs(finalDirection) * 10, 0.5f, 25) * 1.5f);
-                float verticalAmount = Mathf.Clamp(100 / Mathf.Abs(finalDirection) * 10, 0.5f, 25) * 1.5f;
-
-                // Launch player
-                directionVector = new Vector3(finalDirection, verticalAmount, 1).normalized;
-                launchPlayer = true;
-            }
-
-            // Set a jump direction on first jump press
-            if (jumpDirectionPhase)
-            {
-                jumpDirection = aim.eulerAngles.z;
-                jumpDirectionPhase = false;
-                jumpForcePhase = true;
-            }
+            // Finally launch the player
+            cam.changeZoom(true);
+            directionVector = new Vector3(finalDirection, verticalAmount, 1).normalized;
+            launchPlayer = true;
+            playerJumped?.Invoke(); // Using event instead of a public function to show a different way to communicate with other scripts :)
         }
+
+        // Set a jump direction on first jump press
+        if (jumpDirectionPhase)
+        {
+            jumpDirection = aim.eulerAngles.z;
+            jumpDirectionPhase = false;
+            jumpForcePhase = true;
+        }
+    }
+
+    // Triggers when player presses zoom button
+    private void OnZoom()
+    {
+        // Don't allow zooming out when on air
+        if (hasLanded)
+        {
+            cam.changeZoom(false);
+        }
+    }
+
+    // Triggers when player presses leave button
+    private void OnExit()
+    {
+        GameManager.instance.ExitConfirmation();
     }
 
     // Call physics based jumping in FixedUpdate
@@ -131,8 +159,6 @@ public class PlayerScript : MonoBehaviour
             if (directionVector.x > 0) rb.AddTorque(-0.5f, ForceMode2D.Impulse);
             else rb.AddTorque(0.5f, ForceMode2D.Impulse);
 
-            Debug.Log("Dir: " + directionVector.x + " Force: " + force);
-
             // After jumping reset variables used for jumping
             aim.gameObject.SetActive(false);
             jumpForcePhase = false;
@@ -141,6 +167,18 @@ public class PlayerScript : MonoBehaviour
             firstTimeLanding = false;
             hasLanded = false;
         }
+    }
+
+    // Check when player enters the finish platform
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.tag == "Finish") onFinish = true;
+    }
+
+    // Check when player leaves the finish platform
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.tag == "Finish") onFinish = false;
     }
 
     // Timer for counting how long player hasn't been moving for
