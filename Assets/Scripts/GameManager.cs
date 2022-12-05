@@ -12,13 +12,18 @@ public class GameManager : MonoBehaviour
     [SerializeField] private string[] noInGameUIScenes;
     [SerializeField] private GameObject inGameUI;
     [SerializeField] private GameObject endScreenUI;
-    [SerializeField] private TextMeshProUGUI TimeValueText;
-    [SerializeField] private TextMeshProUGUI JumpsValueText;
-    [SerializeField] private TextMeshProUGUI JumpCountMobileText;
+    [SerializeField] private TextMeshProUGUI FinalTimeValueText;
+    [SerializeField] private TextMeshProUGUI FinalJumpsValueText;
     [SerializeField] private TextMeshProUGUI JumpCountPcText;
+    [SerializeField] private TextMeshProUGUI JumpCountMobileText;
+    [SerializeField] private TextMeshProUGUI TimePcText;
+    [SerializeField] private TextMeshProUGUI TimeMobileText;
     private string currentScene;
     private int jumpCount = 0;
     private int currentLevel;
+    private bool timerActive = false;
+    private float currentTime;
+    private TimeSpan parsedTime;
 
     private void Awake()
     {
@@ -56,6 +61,17 @@ public class GameManager : MonoBehaviour
         PlayerScript.playerJumped -= OnPlayerJumped;
     }
 
+    private void Update()
+    {
+        if (timerActive)
+        {
+            currentTime = currentTime + Time.deltaTime;
+            parsedTime = TimeSpan.FromSeconds(currentTime);
+            TimeMobileText.text = parsedTime.ToString(@"mm\:ss\:fff");
+            TimePcText.text = parsedTime.ToString(@"mm\:ss\:fff");
+        }
+    }
+
     // Check what scene loaded
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
@@ -81,6 +97,12 @@ public class GameManager : MonoBehaviour
 
     private void OnPlayerJumped()
     {
+        // If player jumps for the first time start the timer
+        if (jumpCount == 0)
+        {
+            timerActive = true;
+        }
+
         // Count player jumps
         jumpCount++;
         JumpCountPcText.text = "Jumps: " + jumpCount;
@@ -90,17 +112,24 @@ public class GameManager : MonoBehaviour
     // When player has finished the level
     public void LevelFinished()
     {
-        TimeValueText.text = "00:30:493";
-        JumpsValueText.text = jumpCount.ToString();
+        timerActive = false;
+        FinalTimeValueText.text = parsedTime.ToString(@"mm\:ss\:fff");
+        FinalJumpsValueText.text = jumpCount.ToString();
         inGameUI.SetActive(false);
         endScreenUI.SetActive(true);
 
         // Add stats
-        PlayerPrefs.SetInt("Level_" + currentLevel + "_jumps", jumpCount);
-        PlayerPrefs.SetInt("Level_" + currentLevel + "_time", jumpCount);
+        if (PlayerPrefs.HasKey("Level_" + currentLevel + "_jumps") == false || (jumpCount < PlayerPrefs.GetInt("Level_" + currentLevel + "_jumps") || currentTime < PlayerPrefs.GetFloat("Level_" + currentLevel + "_time")))
+        { // || time in int < playerprefs
+            PlayerPrefs.SetInt("Level_" + currentLevel + "_jumps", jumpCount);
+            PlayerPrefs.SetFloat("Level_" + currentLevel + "_time", jumpCount);
+            // NEW HIGHSCORE TEXT
+        }
+
 
         // Reset level stats
         jumpCount = 0;
+        currentTime = 0;
         JumpCountPcText.text = "Jumps: " + jumpCount;
         JumpCountMobileText.text = "Jumps: " + jumpCount;
     }
