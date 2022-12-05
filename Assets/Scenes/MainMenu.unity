@@ -4256,6 +4256,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: DevScripts
       objectReference: {fileID: 0}
+    - target: {fileID: 3757843498383953305, guid: 0cf004cc806d82d48944d317464f0c24, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3757843498383953309, guid: 0cf004cc806d82d48944d317464f0c24, type: 3}
       propertyPath: m_RootOrder
       value: 2
