@@ -55,9 +55,10 @@ public class CameraMovement : MonoBehaviour
     }
 
     // Change zoom when player presses the zoom key
-    public void changeZoom()
+    public void changeZoom(bool jumped)
     {
-        if (zoomed) zoomed = false;
+        if (jumped) zoomed = true;
+        else if (zoomed) zoomed = false;
         else zoomed = true;
     }
 

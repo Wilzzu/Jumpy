@@ -114,6 +114,7 @@ public class PlayerScript : MonoBehaviour
             float verticalAmount = Mathf.Clamp(100 / Mathf.Abs(finalDirection) * 10, 0.5f, 25) * 1.5f;
 
             // Finally launch the player
+            cam.changeZoom(true);
             directionVector = new Vector3(finalDirection, verticalAmount, 1).normalized;
             launchPlayer = true;
             playerJumped?.Invoke(); // Using event instead of a public function to show a different way to communicate with other scripts :)
@@ -131,7 +132,11 @@ public class PlayerScript : MonoBehaviour
     // Triggers when player presses zoom button
     private void OnZoom()
     {
-        cam.changeZoom();
+        // Don't allow zooming out when on air
+        if (hasLanded)
+        {
+            cam.changeZoom(false);
+        }
     }
 
     // Triggers when player presses leave button
