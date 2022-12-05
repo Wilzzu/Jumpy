@@ -67,8 +67,8 @@ public class GameManager : MonoBehaviour
         {
             currentTime = currentTime + Time.deltaTime;
             parsedTime = TimeSpan.FromSeconds(currentTime);
-            TimeMobileText.text = parsedTime.ToString(@"mm\:ss\:fff");
-            TimePcText.text = parsedTime.ToString(@"mm\:ss\:fff");
+            TimeMobileText.text = "Time: " + parsedTime.ToString(@"mm\:ss\:fff");
+            TimePcText.text = "Time: " + parsedTime.ToString(@"mm\:ss\:fff");
         }
     }
 
@@ -119,11 +119,12 @@ public class GameManager : MonoBehaviour
         endScreenUI.SetActive(true);
 
         // Add stats
-        if (PlayerPrefs.HasKey("Level_" + currentLevel + "_jumps") == false || (jumpCount < PlayerPrefs.GetInt("Level_" + currentLevel + "_jumps") || currentTime < PlayerPrefs.GetFloat("Level_" + currentLevel + "_time")))
-        { // || time in int < playerprefs
+        if (PlayerPrefs.HasKey("Level_" + currentLevel + "_jumps") == false || currentTime < PlayerPrefs.GetFloat("Level_" + currentLevel + "_time"))
+        {
+            // If player gets faster time update highscore 
+            // Only better time will update it, not fewer jumps
             PlayerPrefs.SetInt("Level_" + currentLevel + "_jumps", jumpCount);
             PlayerPrefs.SetFloat("Level_" + currentLevel + "_time", currentTime);
-            // NEW HIGHSCORE TEXT
         }
 
 
