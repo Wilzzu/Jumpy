@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI JumpCountPcText;
     private string currentScene;
     private int jumpCount = 0;
+    private int currentLevel;
 
     private void Awake()
     {
@@ -72,7 +73,7 @@ public class GameManager : MonoBehaviour
         endScreenUI.SetActive(false);
         if (sceneName == "next")
         {
-            int currentLevel = Int16.Parse(currentScene.Substring(currentScene.IndexOf("_") + 1));
+            currentLevel = Int16.Parse(currentScene.Substring(currentScene.IndexOf("_") + 1));
             SceneManager.LoadScene("Level_" + (currentLevel + 1));
         };
         SceneManager.LoadScene(sceneName);
@@ -94,10 +95,27 @@ public class GameManager : MonoBehaviour
         inGameUI.SetActive(false);
         endScreenUI.SetActive(true);
 
+        // Add stats
+        PlayerPrefs.SetInt("Level_" + currentLevel + "_jumps", jumpCount);
+        PlayerPrefs.SetInt("Level_" + currentLevel + "_time", jumpCount);
+
         // Reset level stats
         jumpCount = 0;
         JumpCountPcText.text = "Jumps: " + jumpCount;
         JumpCountMobileText.text = "Jumps: " + jumpCount;
     }
+
+    public void DeleteScores()
+    {
+        PlayerPrefs.DeleteAll();
+    }
+
+    public void CheckScores()
+    {
+        Debug.Log(PlayerPrefs.HasKey("Level_0_jumps"));
+    }
+
+
+
 
 }
