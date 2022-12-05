@@ -101,7 +101,7 @@ public class PlayerScript : MonoBehaviour
         }
     }
 
-    // Triggers when player presses jump key
+    // Triggers when player presses jump
     private void OnJump()
     {
         // Set jump force on second jump press and jump
@@ -128,10 +128,16 @@ public class PlayerScript : MonoBehaviour
         }
     }
 
-    // Triggers when player presses zoom key
+    // Triggers when player presses zoom button
     private void OnZoom()
     {
         cam.changeZoom();
+    }
+
+    // Triggers when player presses leave button
+    private void OnExit()
+    {
+        GameManager.instance.ExitConfirmation();
     }
 
     // Call physics based jumping in FixedUpdate

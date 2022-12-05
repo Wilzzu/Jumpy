@@ -57,7 +57,8 @@ public class CameraMovement : MonoBehaviour
     // Change zoom when player presses the zoom key
     public void changeZoom()
     {
-        Debug.Log("Change zoom");
+        if (zoomed) zoomed = false;
+        else zoomed = true;
     }
 
     // Follow player with camera and apply given zoom amount and offset

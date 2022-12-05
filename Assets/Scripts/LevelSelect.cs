@@ -34,11 +34,13 @@ public class LevelSelect : MonoBehaviour
                 {
                     levelBtns[i].GetComponent<Button>().interactable = true;
                     levelBtns[i].GetComponent<Image>().color = new Color(1, 0.8f, 0.19f);
+                    levelBtns[i].transform.GetChild(0).GetComponent<TextMeshProUGUI>().color = new Color(1, 1, 1, 1);
                 }
                 else
                 {
                     levelBtns[i].GetComponent<Button>().interactable = false;
                     levelBtns[i].GetComponent<Image>().color = new Color(0.38f, 0.38f, 0.38f);
+                    levelBtns[i].transform.GetChild(0).GetComponent<TextMeshProUGUI>().color = new Color(1, 1, 1, 0.5f);
                 }
             }
         }

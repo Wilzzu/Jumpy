@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private string[] noInGameUIScenes;
     [SerializeField] private GameObject inGameUI;
     [SerializeField] private GameObject endScreenUI;
+    [SerializeField] private GameObject exitConfirmationUI;
     [SerializeField] private TextMeshProUGUI FinalTimeValueText;
     [SerializeField] private TextMeshProUGUI FinalJumpsValueText;
     [SerializeField] private TextMeshProUGUI JumpCountPcText;
@@ -127,12 +128,40 @@ public class GameManager : MonoBehaviour
             PlayerPrefs.SetFloat("Level_" + currentLevel + "_time", currentTime);
         }
 
+        ResetLevelStats();
+    }
 
-        // Reset level stats
+    private void ResetLevelStats()
+    {
         jumpCount = 0;
         currentTime = 0;
+        timerActive = false;
         JumpCountPcText.text = "Jumps: " + jumpCount;
         JumpCountMobileText.text = "Jumps: " + jumpCount;
+        TimeMobileText.text = "Time: 00:00:000";
+        TimePcText.text = "Time: 00:00:000";
+    }
+
+    public void ExitConfirmation()
+    {
+        if (exitConfirmationUI.activeSelf)
+        {
+            exitConfirmationUI.SetActive(false);
+            Time.timeScale = 1;
+        }
+        else
+        {
+            exitConfirmationUI.SetActive(true);
+            Time.timeScale = 0;
+        }
+    }
+
+    public void ExitLevel()
+    {
+        exitConfirmationUI.SetActive(false);
+        Time.timeScale = 1;
+        ResetLevelStats();
+        SceneManager.LoadScene("LevelSelect");
     }
 
     public void DeleteScores()
