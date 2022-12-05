@@ -122,7 +122,7 @@ public class GameManager : MonoBehaviour
         if (PlayerPrefs.HasKey("Level_" + currentLevel + "_jumps") == false || (jumpCount < PlayerPrefs.GetInt("Level_" + currentLevel + "_jumps") || currentTime < PlayerPrefs.GetFloat("Level_" + currentLevel + "_time")))
         { // || time in int < playerprefs
             PlayerPrefs.SetInt("Level_" + currentLevel + "_jumps", jumpCount);
-            PlayerPrefs.SetFloat("Level_" + currentLevel + "_time", jumpCount);
+            PlayerPrefs.SetFloat("Level_" + currentLevel + "_time", currentTime);
             // NEW HIGHSCORE TEXT
         }
 

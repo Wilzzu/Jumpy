@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
+using System;
 
 public class LevelSelect : MonoBehaviour
 {
@@ -22,7 +23,8 @@ public class LevelSelect : MonoBehaviour
             if (PlayerPrefs.HasKey(levelBtns[i].name + "_jumps"))
             {
                 levelBtns[i].transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = "Completed!";
-                levelBtns[i].transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = "Jumps: " + PlayerPrefs.GetInt(levelBtns[i].name + "_jumps").ToString();
+                TimeSpan parsedTime = TimeSpan.FromSeconds(PlayerPrefs.GetFloat(levelBtns[i].name + "_time"));
+                levelBtns[i].transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = "Jumps: " + PlayerPrefs.GetInt(levelBtns[i].name + "_jumps").ToString() + "\nTime: " + parsedTime.ToString(@"mm\:ss\:fff");
             }
 
             // Unlock next levels
