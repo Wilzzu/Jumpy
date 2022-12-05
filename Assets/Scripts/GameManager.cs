@@ -38,13 +38,20 @@ public class GameManager : MonoBehaviour
         }
         else Destroy(gameObject);
 
-        // Check if mobile
+        // Enable mobile elements
         if (Application.isMobilePlatform)
         {
             isMobile = true;
             mainMenuUIMobile.SetActive(true);
+            inGameUI.transform.GetChild(0).gameObject.SetActive(true);
+            endScreenUI.transform.GetChild(0).gameObject.SetActive(true);
         }
-        else mainMenuUIPc.SetActive(true);
+        else
+        {
+            mainMenuUIPc.SetActive(true);
+            inGameUI.transform.GetChild(1).gameObject.SetActive(true);
+            endScreenUI.transform.GetChild(1).gameObject.SetActive(true);
+        }
 
     }
 
