@@ -25,9 +25,9 @@ public class LevelSelect : MonoBehaviour
                 levelBtns[i].transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = "Jumps: " + PlayerPrefs.GetInt(levelBtns[i].name + "_jumps").ToString();
             }
 
+            // Unlock next levels
             if (levelBtns[i].name != "Level_0")
             {
-                // Unlock levels
                 if (PlayerPrefs.HasKey(levelBtns[i - 1].name + "_jumps"))
                 {
                     levelBtns[i].GetComponent<Button>().interactable = true;
