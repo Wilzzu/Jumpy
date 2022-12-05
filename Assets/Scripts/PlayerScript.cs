@@ -94,8 +94,8 @@ public class PlayerScript : MonoBehaviour
         {
             if (jumpForce >= 100) changeJumpForceDirection = true;
             if (jumpForce <= 0) changeJumpForceDirection = false;
-            if (changeJumpForceDirection) jumpForce--;
-            else jumpForce++;
+            if (changeJumpForceDirection) jumpForce = jumpForce - (Time.deltaTime * 80);
+            else jumpForce = jumpForce + (Time.deltaTime * 80);
 
             aim.localScale = new Vector3(jumpForce / 100, 1, 1);
         }

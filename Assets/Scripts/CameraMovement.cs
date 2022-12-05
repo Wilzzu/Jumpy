@@ -19,21 +19,34 @@ public class CameraMovement : MonoBehaviour
     // Variables for zooming
     [SerializeField] private float zoomSpeed;
     [SerializeField] private bool zoomed = true;
-    private float[] zoomAmount = new float[] { 8, 7 };
+    [SerializeField] private float[] zoomAmount = new float[] { 14, 12 };
     private float currentPosition;
+    private bool isMobile;
 
     private void Start()
     {
         // Get important components
         cam = gameObject.GetComponent<Camera>();
         rb = player.GetComponent<Rigidbody2D>();
+        isMobile = GameManager.instance.isMobile;
     }
+
 
     private void FixedUpdate()
     {
         // Assign camera values depending on if player has zoomed or not
-        if (zoomed) zoomAmount = new float[] { 5, 3 };
-        else zoomAmount = new float[] { 8, 7 };
+        if (isMobile) // ota huutis pois oikeesee versioo
+        {
+            if (zoomed) zoomAmount = new float[] { 8, 2 };
+            else zoomAmount = new float[] { 14, 12 };
+        }
+        else
+        {
+            if (zoomed) zoomAmount = new float[] { 6, 3 };
+            else zoomAmount = new float[] { 11, 10 };
+        }
+
+
 
         // Check if player is moving fast vertically and change camera position variables if needed
         bool playerLanded = player.gameObject.GetComponent<PlayerScript>().hasLanded;
