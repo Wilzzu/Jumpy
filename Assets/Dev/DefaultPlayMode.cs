@@ -1,3 +1,4 @@
+/*
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -27,3 +28,4 @@ public class DefaultPlayMode : EditorWindow
         GetWindow<DefaultPlayMode>();
     }
 }
+*/
