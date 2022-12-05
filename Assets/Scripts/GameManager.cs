@@ -99,8 +99,8 @@ public class GameManager : MonoBehaviour
         {
             currentLevel = Int16.Parse(currentScene.Substring(currentScene.IndexOf("_") + 1));
             SceneManager.LoadScene("Level_" + (currentLevel + 1));
-        };
-        SceneManager.LoadScene(sceneName);
+        }
+        else SceneManager.LoadScene(sceneName);
     }
 
     private void OnPlayerJumped()
