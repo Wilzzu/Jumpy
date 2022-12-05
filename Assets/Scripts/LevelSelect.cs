@@ -8,7 +8,11 @@ using System;
 
 public class LevelSelect : MonoBehaviour
 {
-    [SerializeField] private GameObject[] levelBtns;
+    [SerializeField] private GameObject[] levelBtnsPC;
+    [SerializeField] private GameObject[] levelBtnsMobile;
+    [SerializeField] private GameObject UIPc;
+    [SerializeField] private GameObject UIMobile;
+
 
     public void StartLevel(string sceneName)
     {
@@ -17,6 +21,22 @@ public class LevelSelect : MonoBehaviour
 
     private void Awake()
     {
+        // Enable UI and initialize buttons
+        if (GameManager.instance.isMobile)
+        {
+            UIMobile.SetActive(true);
+            ActivateButtons(levelBtnsMobile);
+        }
+        else
+        {
+            UIPc.SetActive(true);
+            ActivateButtons(levelBtnsPC);
+        }
+    }
+
+    private void ActivateButtons(GameObject[] levelBtns)
+    {
+        // Do stuff to buttons
         for (int i = 0; i < levelBtns.Length; i++)
         {
             // Add stats if level is completed
