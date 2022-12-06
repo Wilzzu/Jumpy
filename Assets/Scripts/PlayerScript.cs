@@ -97,7 +97,7 @@ public class PlayerScript : MonoBehaviour
             if (changeJumpForceDirection) jumpForce = jumpForce - (Time.deltaTime * 80);
             else jumpForce = jumpForce + (Time.deltaTime * 80);
 
-            aim.localScale = new Vector3(jumpForce / 100, 1, 1);
+            aim.transform.GetChild(0).localScale = new Vector3(7.5f, jumpForce / 7, 1);
         }
     }
 
@@ -161,6 +161,7 @@ public class PlayerScript : MonoBehaviour
 
             // After jumping reset variables used for jumping
             aim.gameObject.SetActive(false);
+            aim.transform.GetChild(0).localScale = new Vector3(7.5f, 10, 1);
             jumpForcePhase = false;
             timeNotMoving = 0;
             jumpForce = 0;
