@@ -23,6 +23,12 @@ public class MainMenu : MonoBehaviour
         highScoreText.text = "Levels completed: " + levelsCompleted + "/" + levelCount;
     }
 
+    public void DeleteScores()
+    {
+        PlayerPrefs.DeleteAll();
+        highScoreText.text = "Levels completed: 0/" + levelCount;
+    }
+
     public void QuitGame()
     {
         Application.Quit();

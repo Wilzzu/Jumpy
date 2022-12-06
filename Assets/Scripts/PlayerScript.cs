@@ -171,15 +171,11 @@ public class PlayerScript : MonoBehaviour
     }
 
     // Check when player enters the finish platform
+    // If player hits something else than border or finish make onFinish false
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.tag == "Finish") onFinish = true;
-    }
-
-    // Check when player leaves the finish platform
-    private void OnTriggerExit2D(Collider2D other)
-    {
-        if (other.tag == "Finish") onFinish = false;
+        else if (other.tag != "Border") onFinish = false;
     }
 
     // Timer for counting how long player hasn't been moving for

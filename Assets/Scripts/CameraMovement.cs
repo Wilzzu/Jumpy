@@ -34,8 +34,9 @@ public class CameraMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        /*
         // Assign camera values depending on if player has zoomed or not
-        if (isMobile) // ota huutis pois oikeesee versioo
+        if (isMobile)
         {
             if (zoomed) zoomAmount = new float[] { 8, 2 };
             else zoomAmount = new float[] { 14, 12 };
@@ -45,7 +46,7 @@ public class CameraMovement : MonoBehaviour
             if (zoomed) zoomAmount = new float[] { 6, 3 };
             else zoomAmount = new float[] { 11, 10 };
         }
-
+*/
 
 
         // Check if player is moving fast vertically and change camera position variables if needed
@@ -79,8 +80,9 @@ public class CameraMovement : MonoBehaviour
     private void MoveCamera(float zoomAmount, float verticalOffset)
     {
         Vector3 offset = new Vector3(0, verticalOffset, -10);
-        // Vector3 playerPos = player.position + offset; // follow player on x and y axis
-        Vector3 playerPos = new Vector3(0, player.position.y, 0) + offset;
+        Vector3 playerPos;
+        if (!isMobile) playerPos = player.position + offset; // follow player on x and y axis HUUTIS POIS
+        else playerPos = new Vector3(0, player.position.y, 0) + offset;
 
         cam.orthographicSize = Mathf.Lerp(cam.orthographicSize, zoomAmount, zoomSpeed);
         transform.position = Vector3.SmoothDamp(transform.position, playerPos, ref velocity, smoothAmount);

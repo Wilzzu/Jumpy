@@ -131,17 +131,18 @@ public class GameManager : MonoBehaviour
         endScreenUI.SetActive(true);
 
         // Add stats
-        if (PlayerPrefs.HasKey("Level_" + currentLevel + "_jumps") == false || currentTime < PlayerPrefs.GetFloat("Level_" + currentLevel + "_time"))
+        if (PlayerPrefs.HasKey(currentScene + "_jumps") == false || currentTime < PlayerPrefs.GetFloat(currentScene + "_time"))
         {
             // If player gets faster time update highscore 
             // Only better time will update it, not fewer jumps
-            PlayerPrefs.SetInt("Level_" + currentLevel + "_jumps", jumpCount);
-            PlayerPrefs.SetFloat("Level_" + currentLevel + "_time", currentTime);
+            PlayerPrefs.SetInt(currentScene + "_jumps", jumpCount);
+            PlayerPrefs.SetFloat(currentScene + "_time", currentTime);
         }
 
         ResetLevelStats();
     }
 
+    // Reset level stats to normal values
     private void ResetLevelStats()
     {
         jumpCount = 0;
@@ -153,6 +154,7 @@ public class GameManager : MonoBehaviour
         TimePcText.text = "Time: 00:00:000";
     }
 
+    // Pause level and confirm exit
     public void ExitConfirmation()
     {
         if (exitConfirmationUI.activeSelf)
@@ -167,6 +169,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // Exit level and unpause
     public void ExitLevel()
     {
         exitConfirmationUI.SetActive(false);
@@ -174,18 +177,4 @@ public class GameManager : MonoBehaviour
         ResetLevelStats();
         SceneManager.LoadScene("LevelSelect");
     }
-
-    public void DeleteScores()
-    {
-        PlayerPrefs.DeleteAll();
-    }
-
-    public void CheckScores()
-    {
-        Debug.Log(PlayerPrefs.HasKey("Level_0_jumps"));
-    }
-
-
-
-
 }
