@@ -13,12 +13,6 @@ public class LevelSelect : MonoBehaviour
     [SerializeField] private GameObject UIPc;
     [SerializeField] private GameObject UIMobile;
 
-
-    public void StartLevel(string sceneName)
-    {
-        SceneManager.LoadScene(sceneName);
-    }
-
     private void Awake()
     {
         // Enable UI and initialize buttons
@@ -34,9 +28,14 @@ public class LevelSelect : MonoBehaviour
         }
     }
 
+    public void StartLevel(string sceneName)
+    {
+        SceneManager.LoadScene(sceneName);
+    }
+
     private void ActivateButtons(GameObject[] levelBtns)
     {
-        // Do stuff to buttons
+        // Access each button
         for (int i = 0; i < levelBtns.Length; i++)
         {
             // Add stats if level is completed

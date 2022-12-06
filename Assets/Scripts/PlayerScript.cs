@@ -36,6 +36,7 @@ public class PlayerScript : MonoBehaviour
     public bool hasLanded = true;
     private bool onFinish = false;
 
+    // Get important objects and components
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -133,10 +134,7 @@ public class PlayerScript : MonoBehaviour
     private void OnZoom()
     {
         // Don't allow zooming out when on air
-        if (hasLanded)
-        {
-            cam.changeZoom(false);
-        }
+        if (hasLanded) cam.changeZoom(false);
     }
 
     // Triggers when player presses leave button
