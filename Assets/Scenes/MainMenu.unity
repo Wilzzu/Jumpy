@@ -2068,8 +2068,10 @@ MonoBehaviour:
   inGameUI: {fileID: 1908280413}
   endScreenUI: {fileID: 986593821}
   exitConfirmationUI: {fileID: 24879203}
-  FinalTimeValueText: {fileID: 210449969}
-  FinalJumpsValueText: {fileID: 357371878}
+  FinalTimeValuePcText: {fileID: 210449969}
+  FinalTimeValueMobileText: {fileID: 47186137}
+  FinalJumpsValuePcText: {fileID: 357371878}
+  FinalJumpsValueMobileText: {fileID: 1258461160}
   JumpCountPcText: {fileID: 96119180}
   JumpCountMobileText: {fileID: 519384815}
   TimePcText: {fileID: 1860059454}

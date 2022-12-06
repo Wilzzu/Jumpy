@@ -15,8 +15,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject inGameUI;
     [SerializeField] private GameObject endScreenUI;
     [SerializeField] private GameObject exitConfirmationUI;
-    [SerializeField] private TextMeshProUGUI FinalTimeValueText;
-    [SerializeField] private TextMeshProUGUI FinalJumpsValueText;
+    [SerializeField] private TextMeshProUGUI FinalTimeValuePcText;
+    [SerializeField] private TextMeshProUGUI FinalTimeValueMobileText;
+    [SerializeField] private TextMeshProUGUI FinalJumpsValuePcText;
+    [SerializeField] private TextMeshProUGUI FinalJumpsValueMobileText;
     [SerializeField] private TextMeshProUGUI JumpCountPcText;
     [SerializeField] private TextMeshProUGUI JumpCountMobileText;
     [SerializeField] private TextMeshProUGUI TimePcText;
@@ -121,8 +123,10 @@ public class GameManager : MonoBehaviour
     public void LevelFinished()
     {
         timerActive = false;
-        FinalTimeValueText.text = parsedTime.ToString(@"mm\:ss\:fff");
-        FinalJumpsValueText.text = jumpCount.ToString();
+        FinalTimeValuePcText.text = parsedTime.ToString(@"mm\:ss\:fff");
+        FinalTimeValueMobileText.text = parsedTime.ToString(@"mm\:ss\:fff");
+        FinalJumpsValuePcText.text = jumpCount.ToString();
+        FinalJumpsValueMobileText.text = jumpCount.ToString();
         inGameUI.SetActive(false);
         endScreenUI.SetActive(true);
 
