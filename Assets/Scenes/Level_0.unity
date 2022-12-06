@@ -534,6 +534,8 @@ MonoBehaviour:
   zoomAmount:
   - 14
   - 12
+  minVal: {x: -4, y: 3.5, z: -10}
+  maxVal: {x: 4, y: 50, z: -10}
 --- !u!1001 &520919040
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1639,11 +1641,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5066982684281041940, guid: 11b4cac55e681c347b8fb5db597bbd7f, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 3.05
+      value: 4.13
       objectReference: {fileID: 0}
     - target: {fileID: 5066982684281041940, guid: 11b4cac55e681c347b8fb5db597bbd7f, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.67
+      value: -2.76
       objectReference: {fileID: 0}
     - target: {fileID: 5066982684281041940, guid: 11b4cac55e681c347b8fb5db597bbd7f, type: 3}
       propertyPath: m_LocalPosition.z

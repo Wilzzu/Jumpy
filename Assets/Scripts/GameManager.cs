@@ -8,7 +8,6 @@ using TMPro;
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
-    public bool isMobile = false;
     [SerializeField] private GameObject mainMenuUIPc;
     [SerializeField] private GameObject mainMenuUIMobile;
     [SerializeField] private string[] noInGameUIScenes;
@@ -23,9 +22,14 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI JumpCountMobileText;
     [SerializeField] private TextMeshProUGUI TimePcText;
     [SerializeField] private TextMeshProUGUI TimeMobileText;
+    public bool isMobile = false;
+
+    // Variables for scene handling
     private string currentScene;
-    private int jumpCount = 0;
     private int currentLevel;
+
+    // Variables used for score
+    private int jumpCount = 0;
     private bool timerActive = false;
     private float currentTime;
     private TimeSpan parsedTime;
@@ -73,6 +77,7 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
+        // Update timer
         if (timerActive)
         {
             currentTime = currentTime + Time.deltaTime;
@@ -122,6 +127,7 @@ public class GameManager : MonoBehaviour
     // When player has finished the level
     public void LevelFinished()
     {
+        // Stop timer and show final stats
         timerActive = false;
         FinalTimeValuePcText.text = parsedTime.ToString(@"mm\:ss\:fff");
         FinalTimeValueMobileText.text = parsedTime.ToString(@"mm\:ss\:fff");
@@ -130,7 +136,7 @@ public class GameManager : MonoBehaviour
         inGameUI.SetActive(false);
         endScreenUI.SetActive(true);
 
-        // Add stats
+        // Add stats to PlayerPrefs
         if (PlayerPrefs.HasKey(currentScene + "_jumps") == false || currentTime < PlayerPrefs.GetFloat(currentScene + "_time"))
         {
             // If player gets faster time update highscore 

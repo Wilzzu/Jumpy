@@ -12,6 +12,7 @@ public class MainMenu : MonoBehaviour
 
     private void Awake()
     {
+        // Calculate how many levels are completed and show them on highscore
         int levelsCompleted = 0;
         for (int i = 0; i < levelCount; i++)
         {
@@ -23,6 +24,7 @@ public class MainMenu : MonoBehaviour
         highScoreText.text = "Levels completed: " + levelsCompleted + "/" + levelCount;
     }
 
+    // Delete PlayerPrefs data
     public void DeleteScores()
     {
         PlayerPrefs.DeleteAll();
