@@ -38,7 +38,7 @@ public class CameraMovement : MonoBehaviour
     {
 
         // Assign camera values depending on if player has zoomed and if they are on mobile
-        if (!isMobile)
+        if (isMobile)
         {
             if (zoomed)
             {
@@ -95,7 +95,7 @@ public class CameraMovement : MonoBehaviour
         Vector3 playerPos;
 
         // If player is on mobile follow them on the x-axis as well
-        if (!isMobile) playerPos = player.position + offset;
+        if (isMobile) playerPos = player.position + offset;
         else playerPos = new Vector3(0, player.position.y, 0) + offset;
 
         // Make zooming smoother and add borders to mobile view
@@ -103,7 +103,7 @@ public class CameraMovement : MonoBehaviour
         Vector3 boundPosition = new Vector3(Mathf.Clamp(playerPos.x, minBoundVal.x, maxBoundVal.x), Mathf.Clamp(playerPos.y, minBoundVal.y, maxBoundVal.y), -10);
 
         // Lastly move the camera
-        if (!isMobile) transform.position = Vector3.SmoothDamp(transform.position, boundPosition, ref velocity, smoothAmount);
+        if (isMobile) transform.position = Vector3.SmoothDamp(transform.position, boundPosition, ref velocity, smoothAmount);
         else transform.position = Vector3.SmoothDamp(transform.position, playerPos, ref velocity, smoothAmount);
     }
 }
