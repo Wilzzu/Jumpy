@@ -16,6 +16,7 @@ public class PlayerScript : MonoBehaviour
     private bool launchPlayer = false;
     private Vector3 directionVector;
     private float force;
+    [SerializeField] private AudioSource jumpSoundEffect;
 
     // Variables for aiming
     [SerializeField] private Transform aim;
@@ -35,6 +36,11 @@ public class PlayerScript : MonoBehaviour
     private bool firstTimeLanding = true;
     public bool hasLanded = true;
     private bool onFinish = false;
+    [SerializeField] private AudioSource landSoundEffect;
+    private int bounceAmount = 0;
+    private float startPitch = 1.1f;
+    private float reduceAmount = 8;
+
 
     // Get important objects and components
     private void Start()
@@ -76,6 +82,7 @@ public class PlayerScript : MonoBehaviour
                 aim.localScale = new Vector3(1, 1, 1);
                 jumpDirectionPhase = true;
                 hasLanded = true;
+                bounceAmount = 0;
             }
         }
 
@@ -118,6 +125,7 @@ public class PlayerScript : MonoBehaviour
             cam.changeZoom(true);
             directionVector = new Vector3(finalDirection, verticalAmount, 1).normalized;
             launchPlayer = true;
+            jumpSoundEffect.Play();
             playerJumped?.Invoke(); // Using event instead of a public function to show a different way to communicate with other scripts :)
         }
 
@@ -165,6 +173,8 @@ public class PlayerScript : MonoBehaviour
             jumpForce = 0;
             firstTimeLanding = false;
             hasLanded = false;
+            startPitch = UnityEngine.Random.Range(1.4f, 1.6f);
+            reduceAmount = UnityEngine.Random.Range(8f, 10f);
         }
     }
 
@@ -174,6 +184,12 @@ public class PlayerScript : MonoBehaviour
     {
         if (other.tag == "Finish") onFinish = true;
         else if (other.tag != "Border") onFinish = false;
+        if (!landSoundEffect.isPlaying)
+        {
+            bounceAmount++;
+            landSoundEffect.pitch = Mathf.Clamp(startPitch - (bounceAmount / reduceAmount), 0.5f, 1.6f);
+            landSoundEffect.Play();
+        }
     }
 
     // Timer for counting how long player hasn't been moving for
