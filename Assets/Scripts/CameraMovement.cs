@@ -22,6 +22,8 @@ public class CameraMovement : MonoBehaviour
     [SerializeField] private float[] zoomAmount = new float[] { 14, 12 };
     private float currentPosition;
     private bool isMobile;
+    private Vector3 minBoundVal, maxBoundVal;
+
 
     private void Start()
     {
@@ -34,11 +36,22 @@ public class CameraMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        // Assign camera values depending on if player has zoomed or not
-        if (isMobile) // ota huutis pois oikeesee versioo
+
+        // Assign camera values depending on if player has zoomed and if they are on mobile
+        if (isMobile)
         {
-            if (zoomed) zoomAmount = new float[] { 8, 2 };
-            else zoomAmount = new float[] { 14, 12 };
+            if (zoomed)
+            {
+                zoomAmount = new float[] { 8.5f, 3 };
+                minBoundVal = new Vector3(-4, 3.5f, -10);
+                maxBoundVal = new Vector3(4, 54, -10);
+            }
+            else
+            {
+                zoomAmount = new float[] { 12, 10 };
+                minBoundVal = new Vector3(-2.1f, 3.5f, -10);
+                maxBoundVal = new Vector3(2.1f, 50.5f, -10);
+            }
         }
         else
         {
@@ -79,10 +92,18 @@ public class CameraMovement : MonoBehaviour
     private void MoveCamera(float zoomAmount, float verticalOffset)
     {
         Vector3 offset = new Vector3(0, verticalOffset, -10);
-        // Vector3 playerPos = player.position + offset; // follow player on x and y axis
-        Vector3 playerPos = new Vector3(0, player.position.y, 0) + offset;
+        Vector3 playerPos;
 
+        // If player is on mobile follow them on the x-axis as well
+        if (isMobile) playerPos = player.position + offset;
+        else playerPos = new Vector3(0, player.position.y, 0) + offset;
+
+        // Make zooming smoother and add borders to mobile view
         cam.orthographicSize = Mathf.Lerp(cam.orthographicSize, zoomAmount, zoomSpeed);
-        transform.position = Vector3.SmoothDamp(transform.position, playerPos, ref velocity, smoothAmount);
+        Vector3 boundPosition = new Vector3(Mathf.Clamp(playerPos.x, minBoundVal.x, maxBoundVal.x), Mathf.Clamp(playerPos.y, minBoundVal.y, maxBoundVal.y), -10);
+
+        // Lastly move the camera
+        if (isMobile) transform.position = Vector3.SmoothDamp(transform.position, boundPosition, ref velocity, smoothAmount);
+        else transform.position = Vector3.SmoothDamp(transform.position, playerPos, ref velocity, smoothAmount);
     }
 }

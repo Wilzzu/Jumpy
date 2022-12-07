@@ -8,22 +8,31 @@ using TMPro;
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
-    public bool isMobile = false;
     [SerializeField] private GameObject mainMenuUIPc;
     [SerializeField] private GameObject mainMenuUIMobile;
     [SerializeField] private string[] noInGameUIScenes;
     [SerializeField] private GameObject inGameUI;
     [SerializeField] private GameObject endScreenUI;
     [SerializeField] private GameObject exitConfirmationUI;
-    [SerializeField] private TextMeshProUGUI FinalTimeValueText;
-    [SerializeField] private TextMeshProUGUI FinalJumpsValueText;
+    [SerializeField] private TextMeshProUGUI FinalTimeValuePcText;
+    [SerializeField] private TextMeshProUGUI FinalTimeValueMobileText;
+    [SerializeField] private TextMeshProUGUI FinalJumpsValuePcText;
+    [SerializeField] private TextMeshProUGUI FinalJumpsValueMobileText;
     [SerializeField] private TextMeshProUGUI JumpCountPcText;
     [SerializeField] private TextMeshProUGUI JumpCountMobileText;
     [SerializeField] private TextMeshProUGUI TimePcText;
     [SerializeField] private TextMeshProUGUI TimeMobileText;
+    [SerializeField] private AudioSource changeSound;
+    [SerializeField] private AudioSource finishSound;
+    public bool isMobile = false;
+    private bool firstTimeLoading = true;
+
+    // Variables for scene handling
     private string currentScene;
-    private int jumpCount = 0;
     private int currentLevel;
+
+    // Variables used for score
+    private int jumpCount = 0;
     private bool timerActive = false;
     private float currentTime;
     private TimeSpan parsedTime;
@@ -71,6 +80,7 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
+        // Update timer
         if (timerActive)
         {
             currentTime = currentTime + Time.deltaTime;
@@ -87,7 +97,12 @@ public class GameManager : MonoBehaviour
         currentScene = scene.name;
 
         // Don't show ingame UI if player is in the menus
-        if (Array.IndexOf(noInGameUIScenes, scene.name) > -1) inGameUI.SetActive(false);
+        if (Array.IndexOf(noInGameUIScenes, scene.name) > -1)
+        {
+            inGameUI.SetActive(false);
+            if (!firstTimeLoading) changeSound.Play();
+            else firstTimeLoading = false;
+        }
         else inGameUI.SetActive(true);
     }
 
@@ -120,24 +135,29 @@ public class GameManager : MonoBehaviour
     // When player has finished the level
     public void LevelFinished()
     {
+        // Stop timer and show final stats
         timerActive = false;
-        FinalTimeValueText.text = parsedTime.ToString(@"mm\:ss\:fff");
-        FinalJumpsValueText.text = jumpCount.ToString();
+        FinalTimeValuePcText.text = parsedTime.ToString(@"mm\:ss\:fff");
+        FinalTimeValueMobileText.text = parsedTime.ToString(@"mm\:ss\:fff");
+        FinalJumpsValuePcText.text = jumpCount.ToString();
+        FinalJumpsValueMobileText.text = jumpCount.ToString();
         inGameUI.SetActive(false);
         endScreenUI.SetActive(true);
+        finishSound.Play();
 
-        // Add stats
-        if (PlayerPrefs.HasKey("Level_" + currentLevel + "_jumps") == false || currentTime < PlayerPrefs.GetFloat("Level_" + currentLevel + "_time"))
+        // Add stats to PlayerPrefs
+        if (PlayerPrefs.HasKey(currentScene + "_jumps") == false || currentTime < PlayerPrefs.GetFloat(currentScene + "_time"))
         {
             // If player gets faster time update highscore 
             // Only better time will update it, not fewer jumps
-            PlayerPrefs.SetInt("Level_" + currentLevel + "_jumps", jumpCount);
-            PlayerPrefs.SetFloat("Level_" + currentLevel + "_time", currentTime);
+            PlayerPrefs.SetInt(currentScene + "_jumps", jumpCount);
+            PlayerPrefs.SetFloat(currentScene + "_time", currentTime);
         }
 
         ResetLevelStats();
     }
 
+    // Reset level stats to normal values
     private void ResetLevelStats()
     {
         jumpCount = 0;
@@ -149,6 +169,7 @@ public class GameManager : MonoBehaviour
         TimePcText.text = "Time: 00:00:000";
     }
 
+    // Pause level and confirm exit
     public void ExitConfirmation()
     {
         if (exitConfirmationUI.activeSelf)
@@ -163,6 +184,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // Exit level and unpause
     public void ExitLevel()
     {
         exitConfirmationUI.SetActive(false);
@@ -170,18 +192,4 @@ public class GameManager : MonoBehaviour
         ResetLevelStats();
         SceneManager.LoadScene("LevelSelect");
     }
-
-    public void DeleteScores()
-    {
-        PlayerPrefs.DeleteAll();
-    }
-
-    public void CheckScores()
-    {
-        Debug.Log(PlayerPrefs.HasKey("Level_0_jumps"));
-    }
-
-
-
-
 }
