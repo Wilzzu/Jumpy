@@ -8,6 +8,7 @@ public class MainMenu : MonoBehaviour
 {
 
     [SerializeField] private TextMeshProUGUI highScoreText;
+    [SerializeField] private TextMeshProUGUI highScoreTextMobile;
     [SerializeField] private AudioSource selectSound;
     [SerializeField] private int levelCount = 8;
 
@@ -23,6 +24,7 @@ public class MainMenu : MonoBehaviour
             }
         }
         highScoreText.text = "Levels completed: " + levelsCompleted + "/" + levelCount;
+        highScoreTextMobile.text = "Levels completed: " + levelsCompleted + "/" + levelCount;
     }
 
     // Delete PlayerPrefs data
@@ -31,6 +33,7 @@ public class MainMenu : MonoBehaviour
         PlayerPrefs.DeleteAll();
         selectSound.Play();
         highScoreText.text = "Levels completed: 0/" + levelCount;
+        highScoreTextMobile.text = "Levels completed: 0/" + levelCount;
     }
 
     public void QuitGame()

@@ -5642,6 +5642,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   highScoreText: {fileID: 2048630533}
+  highScoreTextMobile: {fileID: 771544259}
   selectSound: {fileID: 1266259354}
   levelCount: 8
 --- !u!4 &1266259353
