@@ -8,6 +8,7 @@ public class MainMenu : MonoBehaviour
 {
 
     [SerializeField] private TextMeshProUGUI highScoreText;
+    [SerializeField] private AudioSource selectSound;
     [SerializeField] private int levelCount = 8;
 
     private void Awake()
@@ -28,6 +29,7 @@ public class MainMenu : MonoBehaviour
     public void DeleteScores()
     {
         PlayerPrefs.DeleteAll();
+        selectSound.Play();
         highScoreText.text = "Levels completed: 0/" + levelCount;
     }
 

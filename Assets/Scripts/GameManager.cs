@@ -22,7 +22,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI JumpCountMobileText;
     [SerializeField] private TextMeshProUGUI TimePcText;
     [SerializeField] private TextMeshProUGUI TimeMobileText;
+    [SerializeField] private AudioSource changeSound;
+    [SerializeField] private AudioSource finishSound;
     public bool isMobile = false;
+    private bool firstTimeLoading = true;
 
     // Variables for scene handling
     private string currentScene;
@@ -94,7 +97,12 @@ public class GameManager : MonoBehaviour
         currentScene = scene.name;
 
         // Don't show ingame UI if player is in the menus
-        if (Array.IndexOf(noInGameUIScenes, scene.name) > -1) inGameUI.SetActive(false);
+        if (Array.IndexOf(noInGameUIScenes, scene.name) > -1)
+        {
+            inGameUI.SetActive(false);
+            if (!firstTimeLoading) changeSound.Play();
+            else firstTimeLoading = false;
+        }
         else inGameUI.SetActive(true);
     }
 
@@ -135,6 +143,7 @@ public class GameManager : MonoBehaviour
         FinalJumpsValueMobileText.text = jumpCount.ToString();
         inGameUI.SetActive(false);
         endScreenUI.SetActive(true);
+        finishSound.Play();
 
         // Add stats to PlayerPrefs
         if (PlayerPrefs.HasKey(currentScene + "_jumps") == false || currentTime < PlayerPrefs.GetFloat(currentScene + "_time"))
