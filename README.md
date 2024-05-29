@@ -6,7 +6,7 @@
 
 ## Play Online
 
-You can test Jumpy directly in your browser on itch.io: [wilzzu.itch.io/jumpy](https://wilzzu.itch.io/jumpy)
+Play Jumpy directly in your browser on itch.io: [wilzzu.itch.io/jumpy](https://wilzzu.itch.io/jumpy)
 
 ## Gameplay
 
@@ -25,7 +25,9 @@ You can test Jumpy directly in your browser on itch.io: [wilzzu.itch.io/jumpy](h
 
 ## Installation
 
-You can play the game online on [itch.io](https://wilzzu.itch.io/jumpy) or by downloading the [latest releases](https://github.com/Wilzzu/jumpy/releases/latest) and running the `Jumpy.exe` file. For mobile, download the APK file from [latest releases](https://github.com/Wilzzu/jumpy/releases/latest) and install it on your device.
+You can play the game or download the files on [itch.io](https://wilzzu.itch.io/jumpy).
+- **Desktop:** Download the ZIP file and extract it. Run the `Jumpy.exe` executable to play the game.
+- **Mobile (Android):** Download the APK file and install it on your device.
 
 If you want to build the game yourself, follow the instructions below:
 
