@@ -1,6 +1,12 @@
-# Jumpy
+![Banner](https://i.imgur.com/svzuod5.png)
 
-Challenging 2D platformer game that requires precision and patience. Built with Unity for both desktop and mobile.
+<h1 align="center">Jumpy</h1>
+
+<p align="center">Challenging 2D platformer game that requires precision and patience.</br>Built with Unity for both desktop and mobile.</p>
+
+## Play Online
+
+You can test Jumpy directly in your browser on itch.io: [wilzzu.itch.io/jumpy](https://wilzzu.itch.io/jumpy)
 
 ## Gameplay
 
@@ -9,24 +15,24 @@ Challenging 2D platformer game that requires precision and patience. Built with 
   - **Spacebar / Tap:** Stops the rotating indicator and sets the jump direction.
   - **Spacebar / Tap (again):** Stops the force indicator and jumps with the set power.
   - **B / Magnifying glass icon**: Zoom in and out.
-  - **ESC / Door icon:** Pause the game.
+  - **ESC / Door icon:** Pause menu.
 - **Mechanics:**
 
   - The character will bounce around after jumping. Once it stops, you can jump again.
   - Zoom in and out to see the level better.
 
-- Be careful! One missed jump, and you'll be plummeting back to the start.
+- **Be careful!** One missed jump, and you'll be plummeting back to the start.
 
 ## Installation
 
-You can play the game by downloading the [latest release](https://github.com/Wilzzu/jumpy/releases/latest) and running the `Jumpy.exe` file.
+You can play the game online on [itch.io](https://wilzzu.itch.io/jumpy) or by downloading the [latest releases](https://github.com/Wilzzu/jumpy/releases/latest) and running the `Jumpy.exe` file. For mobile, download the APK file from [latest releases](https://github.com/Wilzzu/jumpy/releases/latest) and install it on your device.
 
 If you want to build the game yourself, follow the instructions below:
 
 1. **Clone the repository:**
 
    ```
-   git clone https://github.com/Wilzzu/jumpy.git
+   git clone https://github.com/Wilzzu/Jumpy.git
    cd Jumpy
    ```
 
