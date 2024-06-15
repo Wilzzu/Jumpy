@@ -8,6 +8,8 @@
 
 Play Jumpy directly in your browser on itch.io: [wilzzu.itch.io/jumpy](https://wilzzu.itch.io/jumpy)
 
+![Screenshots](https://i.imgur.com/ovUj6Hi.png)
+
 ## Gameplay
 
 - **Objective:** Reach the goal at the top of the level.
@@ -26,6 +28,7 @@ Play Jumpy directly in your browser on itch.io: [wilzzu.itch.io/jumpy](https://w
 ## Installation
 
 You can play the game or download the files on [itch.io](https://wilzzu.itch.io/jumpy).
+
 - **Desktop:** Download the ZIP file and extract it. Run the `Jumpy.exe` executable to play the game.
 - **Mobile (Android):** Download the APK file and install it on your device.
 
